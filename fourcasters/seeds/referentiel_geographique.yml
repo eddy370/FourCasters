@@ -1,0 +1,38 @@
+version: 2
+
+seeds:
+  - name: referentiel_geographique
+    description: >
+      Référentiel géographique de 360 communes françaises,
+      utilisé pour enrichir les données Open-Meteo avec les informations
+      administratives et géographiques.
+
+    columns:
+      - name: Commune
+        description: "Nom de la commune."
+
+      - name: Latitude
+        description: "Latitude de référence de la commune."
+
+      - name: Longitude
+        description: "Longitude de référence de la commune."
+
+      - name: Region
+        description: "Région administrative de la commune."
+
+      - name: Departement
+        description: "Nom du département."
+
+      - name: Numero_Departement
+        description: "Numéro du département."
+
+      - name: Service
+        description: "Type de service administratif associé à la commune."
+
+      - name: code_INSEE
+        description: "Code INSEE de la commune."
+
+      - name: Centroide
+        description: >
+          Indique si les coordonnées de la commune correspondent
+          à un centroïde utilisé comme point de référence.

@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_openmeteo
+    description: >
+      Données météorologiques journalières Open-Meteo nettoyées et enrichies.
+      Une ligne correspond à une commune et une date.
+
+    columns:
+      - name: row_hash
+        description: "Identifiant technique unique d'une observation commune-date."
+        tests:
+          - not_null
+          - unique
+
+      - name: ville
+        description: "Nom de la commune."
+        tests:
+          - not_null
+
+      - name: code_insee
+        description: "Code INSEE de la commune."
+        tests:
+          - not_null
+
+      - name: departement
+        description: "Numéro du département."
+        tests:
+          - not_null
+
+      - name: region
+        description: "Région administrative."
+        tests:
+          - not_null
+
+      - name: date
+        description: "Date de l'observation météorologique."
+        tests:
+          - not_null
+
+      - name: temperature_moyenne
+        description: "Température moyenne journalière."

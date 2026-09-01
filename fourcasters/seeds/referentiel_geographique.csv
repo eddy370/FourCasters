@@ -1,0 +1,361 @@
+Commune,Latitude,Longitude,Region,Departement,Numero_Departement,Service,code_INSEE,Centroide
+Belley,45.758136292215738,5.6866481060906429,Auvergne-Rhône-Alpes,Ain,1,Sous-préfecture,1034,Non
+Bourg-en-Bresse,46.203729625039095,5.22669493959291,Auvergne-Rhône-Alpes,Ain,1,Préfecture,1053,Non
+Gex,46.337418822612953,6.06193265929357,Auvergne-Rhône-Alpes,Ain,1,Sous-préfecture,1173,Non
+Nantua,46.151930640163641,5.6072099491915059,Auvergne-Rhône-Alpes,Ain,1,Sous-préfecture,1269,Non
+Saint-Martin-du-Mont,46.100339,5.348301,Auvergne-Rhône-Alpes,Ain,1,Centroïde,1374,Oui
+Château-Thierry,49.046700145022953,3.396600880549776,Hauts-de-France,Aisne,2,Sous-préfecture,2168,Non
+Laon,49.571551639646643,3.6193850809279562,Hauts-de-France,Aisne,2,Préfecture,2408,Non
+Saint-Quentin,49.845842844647706,3.2906195913351119,Hauts-de-France,Aisne,2,Sous-préfecture,2691,Non
+Vervins,49.834169652519407,3.9060123024396312,Hauts-de-France,Aisne,2,Sous-préfecture,2789,Non
+Soissons,49.381754171692,3.328792545117139,Hauts-de-France,Aisne,2,Sous-préfecture,2722,Non
+Montluçon,46.340851676976769,2.601691151816067,Auvergne-Rhône-Alpes,Allier,3,Sous-préfecture,3185,Non
+Moulins,46.562502900539613,3.3291003354540649,Auvergne-Rhône-Alpes,Allier,3,Préfecture,3190,Non
+Vichy,46.129458135924168,3.42473893709965,Auvergne-Rhône-Alpes,Allier,3,Sous-préfecture,3310,Non
+Castellane,43.847370325003446,6.5104861190912224,Provence-Alpes-Côte d'Azur,Alpes-de-Haute-Provence,4,Sous-préfecture,4039,Non
+Barcelonnette,44.387714281874857,6.6436456113995481,Provence-Alpes-Côte d'Azur,Alpes-de-Haute-Provence,4,Sous-préfecture,4019,Non
+Digne-les-bains,44.086009259766243,6.2176957118704337,Provence-Alpes-Côte d'Azur,Alpes-de-Haute-Provence,4,Préfecture,4070,Non
+Forcalquier,43.959523254105655,5.7786825593904192,Provence-Alpes-Côte d'Azur,Alpes-de-Haute-Provence,4,Sous-préfecture,4088,Non
+Sisteron,44.2001925067,5.93083716039,Provence-Alpes-Côte d'Azur,Alpes-de-Haute-Provence,4,Autre,4200,Oui
+Gap,44.558287526999159,6.0776983992949942,Provence-Alpes-Côte d'Azur,Hautes-Alpes,5,Préfecture,5061,Non
+Briançon,44.894321981740646,6.6329057719771454,Provence-Alpes-Côte d'Azur,Hautes-Alpes,5,Sous-préfecture,5023,Non
+Saint-Jean-Saint-Nicolas,44.663679,6.264559,Provence-Alpes-Côte d'Azur,Hautes-Alpes,5,Centroïde,5145,Oui
+Nice,43.701547048480265,7.2617216686205923,Provence-Alpes-Côte d'Azur,Alpes-Maritimes,6,Préfecture,6088,Non
+Grasse,43.64460272891332,6.9331686481054344,Provence-Alpes-Côte d'Azur,Alpes-Maritimes,6,Sous-préfecture,6069,Non
+Massoins,43.93896,7.116669,Provence-Alpes-Côte d'Azur,Alpes-Maritimes,6,Centroïde,6082,Oui
+Largentière,44.544260020822712,4.29496268392044,Auvergne-Rhône-Alpes,Ardèche,7,Sous-préfecture,7132,Non
+Privas,44.728427528422792,4.5922447554658339,Auvergne-Rhône-Alpes,Ardèche,7,Préfecture,7186,Non
+Tournon-sur-rhône,45.060679178975008,4.8455133171831228,Auvergne-Rhône-Alpes,Ardèche,7,Sous-préfecture,7324,Non
+Charleville-Mézières,49.769687398476677,4.72344815439256,Grand Est,Ardennes,8,Préfecture,8105,Non
+Rethel,49.51139899299308,4.3678757034356526,Grand Est,Ardennes,8,Sous-préfecture,8362,Non
+Sedan,49.700875631717281,4.9425205101812049,Grand Est,Ardennes,8,Sous-préfecture,8409,Non
+Vouziers,49.398157756530495,4.7011689252849918,Grand Est,Ardennes,8,Sous-préfecture,8490,Non
+Mazerny,49.61639,4.640197,Grand Est,Ardennes,8,Centroïde,8283,Oui
+Foix,42.965114126412949,1.607005737057787,Occitanie,Ariège,9,Préfecture,9122,Non
+Saint-Girons,42.9859523520392,1.144866150753888,Occitanie,Ariège,9,Sous-préfecture,9261,Non
+Pamiers,43.116313935318139,1.6160762302978111,Occitanie,Ariège,9,Sous-préfecture,9225,Non
+Nogent-sur-seine,48.492230208855538,3.5006999084843069,Grand Est,Aube,10,Sous-préfecture,10268,Non
+Troyes,48.296461215749517,4.0747777938123919,Grand Est,Aube,10,Préfecture,10387,Non
+Bar-sur-aube,48.231771669767838,4.7074778477875974,Grand Est,Aube,10,Sous-préfecture,10033,Non
+Carcassonne,43.213790977309095,2.352004518147885,Occitanie,Aude,11,Préfecture,11069,Non
+Limoux,43.053380591777128,2.2186691867506889,Occitanie,Aude,11,Sous-préfecture,11206,Non
+Narbonne,43.183333358610739,3.0001868339274118,Occitanie,Aude,11,Sous-préfecture,11262,Non
+Villefranche-de-Rouergue,44.351383774947706,2.0366340322014942,Occitanie,Aveyron,12,Sous-préfecture,12300,Non
+Rodez,44.35793053023319,2.5768323686251851,Occitanie,Aveyron,12,Préfecture,12202,Non
+Millau,44.099911079279117,3.07905593051695,Occitanie,Aveyron,12,Sous-préfecture,12145,Non
+Marseille,43.300212992324241,5.38012296519811,Provence-Alpes-Côte d'Azur,Bouches-du-Rhône,13,Préfecture de région,13055,Non
+Aix-en-Provence,43.527603505652351,5.4477573259577357,Provence-Alpes-Côte d'Azur,Bouches-du-Rhône,13,Sous-préfecture,13001,Non
+Istres,43.503538195468607,4.9883334993850932,Provence-Alpes-Côte d'Azur,Bouches-du-Rhône,13,Sous-préfecture,13047,Non
+Arles,43.677953119775843,4.6289124179963306,Provence-Alpes-Côte d'Azur,Bouches-du-Rhône,13,Sous-préfecture,13004,Non
+Saint-Chamas,43.545232,5.084889,Provence-Alpes-Côte d'Azur,Bouches-du-Rhône,13,Centroïde,13092,Oui
+Vire,48.84049644646376,-0.89376225391401,Normandie,Calvados,14,Sous-préfecture,14762,Non
+Lisieux,49.145202764660851,0.229048796530349,Normandie,Calvados,14,Sous-préfecture,14366,Non
+Caen,49.181046531032422,-0.356489581165038,Normandie,Calvados,14,Préfecture de région,14118,Non
+Bayeux,49.279382872359285,-0.70745817511891707,Normandie,Calvados,14,Sous-préfecture,14047,Non
+Fontenay-le-Marmion,49.100053,-0.360767,Normandie,Calvados,14,Centroïde,14277,Oui
+Aurillac,44.927549055896016,2.44247920416064,Auvergne-Rhône-Alpes,Cantal,15,Préfecture,15014,Non
+Mauriac,45.21787348187631,2.3339197790473509,Auvergne-Rhône-Alpes,Cantal,15,Sous-préfecture,15120,Non
+Saint-Flour,45.032627434121984,3.091867068948857,Auvergne-Rhône-Alpes,Cantal,15,Sous-préfecture,15187,Non
+Confolens,46.01503693819317,0.670884645808222,Nouvelle-Aquitaine,Charente,16,Sous-préfecture,16106,Non
+Cognac,45.690098000958677,-0.325835840492517,Nouvelle-Aquitaine,Charente,16,Sous-préfecture,16102,Non
+Angoulême,45.651803326299373,0.158461078733038,Nouvelle-Aquitaine,Charente,16,Préfecture,16015,Non
+Rochefort,45.939327585302266,-0.9618598697955012,Nouvelle-Aquitaine,Charente-Maritime,17,Sous-préfecture,17299,Non
+St-Jean-d'Angély,45.944175226277,-0.519884540762078,Nouvelle-Aquitaine,Charente-Maritime,17,Sous-préfecture,17347,Non
+La Rochelle,46.156719840006168,-1.1478010959000879,Nouvelle-Aquitaine,Charente-Maritime,17,Préfecture,17300,Non
+Jonzac,45.442443383021256,-0.435602974970582,Nouvelle-Aquitaine,Charente-Maritime,17,Sous-préfecture,17197,Non
+Saintes,45.745040523988692,-0.63243271283300606,Nouvelle-Aquitaine,Charente-Maritime,17,Sous-préfecture,17415,Non
+Bourges,47.085208986455456,2.3947563694247438,Centre-Val de Loire,Cher,18,Préfecture,18033,Non
+Saint-Amand-Montrond,46.723116701800429,2.504749991232059,Centre-Val de Loire,Cher,18,Sous-préfecture,18197,Non
+Vierzon,47.223131476699358,2.0679124986768089,Centre-Val de Loire,Cher,18,Sous-préfecture,18279,Non
+Tulle,45.268499258974217,1.7706609443193919,Nouvelle-Aquitaine,Corrèze,19,Préfecture,19272,Non
+Ussel,45.547926753876574,2.310772713250667,Nouvelle-Aquitaine,Corrèze,19,Sous-préfecture,19275,Non
+Brive-la-Gaillarde,45.149739364140324,1.5081230276649771,Nouvelle-Aquitaine,Corrèze,19,Sous-préfecture,19031,Non
+Montbard,47.624556568398077,4.338882204219404,Bourgogne-Franche-Comté,Côte-d'Or,21,Sous-préfecture,21425,Non
+Dijon,47.320163375203727,5.0360371938849191,Bourgogne-Franche-Comté,Côte-d'Or,21,Préfecture de région,21231,Non
+Beaune,47.023901997784606,4.8391158901758846,Bourgogne-Franche-Comté,Côte-d'Or,21,Sous-préfecture,21054,Non
+Dinan,48.454227345965108,-2.0425541644855492,Bretagne,Côtes-d'Armor,22,Sous-préfecture,22050,Non
+Saint-Brieuc,48.509986169746426,-2.763184580809301,Bretagne,Côtes-d'Armor,22,Préfecture,22278,Non
+Lannion,48.7322276904944,-3.45859830807043,Bretagne,Côtes-d'Armor,22,Sous-préfecture,22113,Non
+Guingamp,48.562246803736407,-3.1552114823988791,Bretagne,Côtes-d'Armor,22,Sous-préfecture,22070,Non
+Plaine-Haute,48.440506,-2.865489,Bretagne,Côtes-d'Armor,22,Centroïde,22170,Oui
+Guéret,46.172129592488858,1.868300399072274,Nouvelle-Aquitaine,Creuse,23,Préfecture,23096,Non
+Aubusson,45.953098534449047,2.1694844851763539,Nouvelle-Aquitaine,Creuse,23,Sous-préfecture,23008,Non
+Ahun,46.090302,2.017978,Nouvelle-Aquitaine,Creuse,23,Centroïde,23001,Oui
+Nontron,45.537433814341306,0.6654251491606491,Nouvelle-Aquitaine,Dordogne,24,Sous-préfecture,24311,Non
+Périgueux,45.189350892627431,0.707015596413719,Nouvelle-Aquitaine,Dordogne,24,Préfecture,24322,Non
+Sarlat-la-Canéda,44.88588830793362,1.2173750375537069,Nouvelle-Aquitaine,Dordogne,24,Sous-préfecture,24520,Non
+Bergerac,44.855017285758215,0.485498957827373,Nouvelle-Aquitaine,Dordogne,24,Sous-préfecture,24037,Non
+Sanilhac,45.104957,0.741215,Nouvelle-Aquitaine,Dordogne,24,Centroïde,24312,Oui
+Besançon,47.238401534008254,6.0250199753840468,Bourgogne-Franche-Comté,Doubs,25,Préfecture de région,25056,Non
+Pontarlier,46.9065681400222,6.3545615064731793,Bourgogne-Franche-Comté,Doubs,25,Sous-préfecture,25462,Non
+Montbéliard,47.5092033748732,6.7983208255240433,Bourgogne-Franche-Comté,Doubs,25,Sous-préfecture,25388,Non
+Die,44.756457014976576,5.3679126111162558,Auvergne-Rhône-Alpes,Drôme,26,Sous-préfecture,26113,Non
+Nyons,44.359603308803713,5.1330575293513032,Auvergne-Rhône-Alpes,Drôme,26,Sous-préfecture,26220,Non
+Valence,44.930959251412254,4.8932967912655991,Auvergne-Rhône-Alpes,Drôme,26,Préfecture,26362,Non
+Les Andelys,49.246856398453446,1.4156482570380811,Normandie,Eure,27,Sous-préfecture,27016,Non
+Bernay,49.090880568674933,0.59834135829104806,Normandie,Eure,27,Sous-préfecture,27056,Non
+Evreux,49.0236015015961,1.152616775515009,Normandie,Eure,27,Préfecture,27229,Non
+Dreux,48.736788807904304,1.366381496636121,Centre-Val de Loire,Eure-et-Loir,28,Sous-préfecture,28134,Non
+Chartres,48.445817141502125,1.5031487777507109,Centre-Val de Loire,Eure-et-Loir,28,Préfecture,28085,Non
+Nogent-le-Rotrou,48.318932958908711,0.82106201711022708,Centre-Val de Loire,Eure-et-Loir,28,Sous-préfecture,28280,Non
+Châteaudun,48.074720199622682,1.34163454478378,Centre-Val de Loire,Eure-et-Loir,28,Sous-préfecture,28088,Non
+Nogent-sur-Eure,48.388261,1.369771,Centre-Val de Loire,Eure-et-Loir,28,Centroïde,28281,Oui
+Brest,48.387267599367327,-4.4882717084536514,Bretagne,Finistère,29,Sous-préfecture,29019,Non
+Châteaulin,48.195292632039177,-4.0897648799426758,Bretagne,Finistère,29,Sous-préfecture,29026,Non
+Morlaix,48.5793023498892,-3.826725173603867,Bretagne,Finistère,29,Sous-préfecture,29151,Non
+Quimper,47.995911354414247,-4.1020919300477336,Bretagne,Finistère,29,Préfecture,29232,Non
+Lopérec,48.260943,-4.060308,Bretagne,Finistère,29,Centroïde,29139,Oui
+Le Vigan,43.989431047466368,3.602269220521785,Occitanie,Gard,30,Sous-préfecture,30350,Non
+Alès,44.124066764934696,4.0817946725845333,Occitanie,Gard,30,Sous-préfecture,30007,Non
+Nîmes,43.836600844778616,4.3593311626009781,Occitanie,Gard,30,Préfecture,30189,Non
+Saint-Gaudens,43.109557399329866,0.72364425037576,Occitanie,Haute-Garonne,31,Sous-préfecture,31483,Non
+Muret,43.465425838991216,1.334502976564248,Occitanie,Haute-Garonne,31,Sous-préfecture,31395,Non
+Toulouse,43.602720067671328,1.441503456617365,Occitanie,Haute-Garonne,31,Préfecture de région,31555,Non
+Auch,43.64692235662374,0.588426332442964,Occitanie,Gers,32,Préfecture,32013,Non
+Condom,43.957671979121685,0.371088232617967,Occitanie,Gers,32,Sous-préfecture,32107,Non
+Mirande,43.514676035053682,0.404475982319192,Occitanie,Gers,32,Sous-préfecture,32256,Non
+Blaye,45.128018777604268,-0.6618436197145251,Nouvelle-Aquitaine,Gironde,33,Sous-préfecture,33058,Non
+Lesparre-Médoc,45.307024241082566,-0.938711249459351,Nouvelle-Aquitaine,Gironde,33,Sous-préfecture,33240,Non
+Libourne,44.914103450846873,-0.243580755779148,Nouvelle-Aquitaine,Gironde,33,Sous-préfecture,33243,Non
+Bordeaux,44.84267933141048,-0.57291679511206,Nouvelle-Aquitaine,Gironde,33,Préfecture de région,33063,Non
+Langon,44.55267539350195,-0.247868343130797,Nouvelle-Aquitaine,Gironde,33,Sous-préfecture,33227,Non
+Montpellier,43.606947714269943,3.8752381313052959,Occitanie,Hérault,34,Préfecture de région,34172,Non
+Béziers,43.344687430611771,3.230507457114288,Occitanie,Hérault,34,Sous-préfecture,34032,Non
+Lodève,43.733154888812521,3.3198063045939619,Occitanie,Hérault,34,Sous-préfecture,34142,Non
+Saint-Malo,48.6388766823234,-1.9966774300463488,Bretagne,Ille-et-Vilaine,35,Sous-préfecture,35288,Non
+Redon,47.660588252039837,-2.077382652688351,Bretagne,Ille-et-Vilaine,35,Sous-préfecture,35236,Non
+Fougères,48.35447320415529,-1.199707090036618,Bretagne,Ille-et-Vilaine,35,Sous-préfecture,35115,Non
+Rennes,48.1085951462222,-1.6792348710963232,Bretagne,Ille-et-Vilaine,35,Préfecture de région,35238,Non
+Betton,48.15498,-1.637371,Bretagne,Ille-et-Vilaine,35,Centroïde,35024,Oui
+Le Blanc,46.6338724531456,1.0635134786667439,Centre-Val de Loire,Indre,36,Sous-préfecture,36018,Non
+Issoudun,46.949354366138522,1.9924221255907224,Centre-Val de Loire,Indre,36,Sous-préfecture,36088,Non
+Châteauroux,46.809472103030728,1.6920288078072132,Centre-Val de Loire,Indre,36,Préfecture,36044,Non
+La Châtre,46.58070017559772,1.989316902899696,Centre-Val de Loire,Indre,36,Sous-préfecture,36046,Non
+Saint-Maur,46.778162,1.57665,Centre-Val de Loire,Indre,36,Centroïde,36202,Oui
+Tours,47.395413403401065,0.693427643079031,Centre-Val de Loire,Indre-et-Loire,37,Préfecture,37261,Non
+Chinon,47.167091071247178,0.244763509265403,Centre-Val de Loire,Indre-et-Loire,37,Sous-préfecture,37072,Non
+Loches,47.1287529247587,0.996811124093244,Centre-Val de Loire,Indre-et-Loire,37,Sous-préfecture,37132,Non
+Grenoble,45.185544966696071,5.7150797502208173,Auvergne-Rhône-Alpes,Isère,38,Préfecture,38185,Non
+La Tour-du-pin,45.567965101807992,5.4447057917014208,Auvergne-Rhône-Alpes,Isère,38,Sous-préfecture,38509,Non
+Vienne,45.523556643057169,4.873285176635477,Auvergne-Rhône-Alpes,Isère,38,Sous-préfecture,38544,Non
+Saint-Claude,46.385300227907479,5.86410423966912,Bourgogne-Franche-Comté,Jura,39,Sous-préfecture,39478,Non
+Lons-le-Saunier,46.675335043225282,5.5541480700681856,Bourgogne-Franche-Comté,Jura,39,Préfecture,39300,Non
+Dole,47.089936936064248,5.4819562582937706,Bourgogne-Franche-Comté,Jura,39,Sous-préfecture,39198,Non
+Mont-de-Marsan,43.891271311370232,-0.500148890227131,Nouvelle-Aquitaine,Landes,40,Préfecture,40192,Non
+Dax,43.708486155008096,-1.053621486301328,Nouvelle-Aquitaine,Landes,40,Sous-préfecture,40088,Non
+Villenave,43.965801,-0.783681,Nouvelle-Aquitaine,Landes,40,Centroïde,40330,Oui
+Romorantin-Lanthenay,47.359260293788061,1.7436416514504391,Centre-Val de Loire,Loir-et-Cher,41,Sous-préfecture,41194,Non
+Blois,47.588270012872883,1.3302372623222629,Centre-Val de Loire,Loir-et-Cher,41,Préfecture,41018,Non
+Vendôme,47.798605347526212,1.0644717735456659,Centre-Val de Loire,Loir-et-Cher,41,Sous-préfecture,41269,Non
+Saint-Etienne,45.440639813360477,4.3908348124526437,Auvergne-Rhône-Alpes,Loire,42,Préfecture,42218,Non
+Montbrison,45.606907740903878,4.064772219118395,Auvergne-Rhône-Alpes,Loire,42,Sous-préfecture,42147,Non
+Roanne,46.038211895968594,4.0684184996824619,Auvergne-Rhône-Alpes,Loire,42,Sous-préfecture,42187,Non
+Brioude,45.2941592641599,3.3844540820491762,Auvergne-Rhône-Alpes,Haute-Loire,43,Sous-préfecture,43040,Non
+Yssingeaux,45.141910382433572,4.12329824003823,Auvergne-Rhône-Alpes,Haute-Loire,43,Sous-préfecture,43268,Non
+Le-Puy-en-Velay,45.0433051563826,3.8858194491607851,Auvergne-Rhône-Alpes,Haute-Loire,43,Préfecture,43157,Non
+Saint-Nazaire,47.281915025218048,-2.2087867554986422,Pays de la Loire,Loire-Atlantique,44,Sous-préfecture,44184,Non
+Ancenis,47.365932839566511,-1.1775014713118011,Pays de la Loire,Loire-Atlantique,44,Sous-préfecture,44003,Non
+Châteaubriant,47.71716013771838,-1.37830970005258,Pays de la Loire,Loire-Atlantique,44,Sous-préfecture,44036,Non
+Nantes,47.216842059033567,-1.551502310145507,Pays de la Loire,Loire-Atlantique,44,Préfecture de région,44109,Non
+Notre-Dame-des-Landes,47.362738,-1.678863,Pays de la Loire,Loire-Atlantique,44,Centroïde,44111,Oui
+Montargis,47.995710687234961,2.7326112360971231,Centre-Val de Loire,Loiret,45,Sous-préfecture,45208,Non
+Orléans,47.900031674274985,1.905768551869675,Centre-Val de Loire,Loiret,45,Préfecture de région,45234,Non
+Pithiviers,48.173993963716718,2.254058039049748,Centre-Val de Loire,Loiret,45,Sous-préfecture,45252,Non
+Gourdon,44.736891163517612,1.381104800243004,Occitanie,Lot,46,Sous-préfecture,46127,Non
+Cahors,44.451013090674451,1.4352852042008639,Occitanie,Lot,46,Préfecture,46042,Non
+Figeac,44.608647083549229,2.0337813329919849,Occitanie,Lot,46,Sous-préfecture,46102,Non
+Marmande,44.500754521227741,0.165682460516121,Nouvelle-Aquitaine,Lot-et-Garonne,47,Sous-préfecture,47157,Non
+Agen,44.204102902208689,0.61860663637813207,Nouvelle-Aquitaine,Lot-et-Garonne,47,Préfecture,47001,Non
+Villeneuve-sur-lot,44.407207784881912,0.70544803402088907,Nouvelle-Aquitaine,Lot-et-Garonne,47,Sous-préfecture,47323,Non
+Nérac,44.136320043775136,0.339194198535713,Nouvelle-Aquitaine,Lot-et-Garonne,47,Sous-préfecture,47195,Non
+Granges-sur-Lot,44.367386,0.460631,Nouvelle-Aquitaine,Lot-et-Garonne,47,Centroïde,47111,Oui
+Florac,44.330087847860263,3.5891677269656568,Occitanie,Lozère,48,Sous-préfecture,48061,Non
+Mende,44.518341693443389,3.4985729227860731,Occitanie,Lozère,48,Préfecture,48095,Non
+Saint-Chely-d-Apcher,44.8126363545,3.2751576154,Occitanie,Lozère,48,Autre,48200,Oui
+Cholet,47.06191339060895,-0.87886295431635908,Pays de la Loire,Maine-et-Loire,49,Sous-préfecture,49099,Non
+Saumur,47.260459429053483,-0.078728243393399,Pays de la Loire,Maine-et-Loire,49,Sous-préfecture,49328,Non
+Sègre,47.6885814188786,-0.86783904282079,Pays de la Loire,Maine-et-Loire,49,Sous-préfecture,49331,Non
+Angers,47.470476833984691,-0.555012765768455,Pays de la Loire,Maine-et-Loire,49,Préfecture,49007,Non
+Mûrs-Erigné,47.390548,-0.559006,Pays de la Loire,Maine-et-Loire,49,Centroïde,49223,Oui
+Avranches,48.683988578844,-1.3584501963683611,Normandie,Manche,50,Sous-préfecture,50025,Non
+Coutances,49.048044051257975,-1.4445602886039739,Normandie,Manche,50,Sous-préfecture,50147,Non
+Cherbourg-Octeville,49.63955740337969,-1.627849297802336,Normandie,Manche,50,Sous-préfecture,50129,Non
+Camprond,49.081402,-1.329436,Normandie,Manche,50,Centroïde,50094,Oui
+Vitry-le-François,48.726298939038152,4.5852534878644464,Grand Est,Marne,51,Sous-préfecture,51649,Non
+Saint-Lô,49.116413450635243,-1.0901422535336811,Normandie,Manche,50,Préfecture,50502,Non
+Reims,49.257352526899957,4.0358681854696563,Grand Est,Marne,51,Sous-préfecture,51454,Non
+Châlons-en-Champagne,48.9572046978582,4.3653198596013114,Grand Est,Marne,51,Préfecture de région,51108,Non
+Epernay,49.046705139748738,3.9598415397535263,Grand Est,Marne,51,Sous-préfecture,51230,Non
+Sainte-Ménehould,49.090046225369193,4.8965370626523,Grand Est,Marne,51,Sous-préfecture,51507,Non
+Langres,47.864429770501367,5.3335011471281044,Grand Est,Haute-Marne,52,Sous-préfecture,52269,Non
+Saint-Dizier,48.637425619541567,4.9469639175559266,Grand Est,Haute-Marne,52,Sous-préfecture,52448,Non
+Chaumont,48.105464719794085,5.1417900058818713,Grand Est,Haute-Marne,52,Préfecture,52121,Non
+Laval,48.070025164364019,-0.7718624446116491,Pays de la Loire,Mayenne,53,Préfecture,53130,Non
+Mayenne,48.30349947277341,-0.616707688353451,Pays de la Loire,Mayenne,53,Sous-préfecture,53147,Non
+Château-Gontier,47.828081437989326,-0.70806131616017709,Pays de la Loire,Mayenne,53,Sous-préfecture,53062,Non
+Briey,49.246878374614028,5.9400273987703711,Grand Est,Meurthe-et-Moselle,54,Sous-préfecture,54099,Non
+Toul,48.675081610242643,5.8907243902295114,Grand Est,Meurthe-et-Moselle,54,Sous-préfecture,54528,Non
+Luneville,48.590279628346238,6.5052034762043984,Grand Est,Meurthe-et-Moselle,54,Sous-préfecture,54329,Non
+Nancy,48.689610494535486,6.1874066130218974,Grand Est,Meurthe-et-Moselle,54,Préfecture,54395,Non
+Malleloy,48.788078,6.162212,Grand Est,Meurthe-et-Moselle,54,Centroïde,54338,Oui
+Commercy,48.762275713791382,5.59109019680394,Grand Est,Meuse,55,Sous-préfecture,55122,Non
+Bar-le-Duc,48.773892376065128,5.1599704409168492,Grand Est,Meuse,55,Préfecture,55029,Non
+Verdun,49.15910276702612,5.3841814096713394,Grand Est,Meuse,55,Sous-préfecture,55545,Non
+Vannes,47.658780232609523,-2.758089809365857,Bretagne,Morbihan,56,Préfecture,56260,Non
+Pontivy,48.066888291669933,-2.966303740539193,Bretagne,Morbihan,56,Sous-préfecture,56178,Non
+Lorient,47.749603553754341,-3.3620033735509471,Bretagne,Morbihan,56,Sous-préfecture,56121,Non
+Metz,49.1182112882402,6.1755348706158477,Grand Est,Moselle,57,Préfecture de région,57463,Non
+Forbach,49.191222557570818,6.897615489396137,Grand Est,Moselle,57,Sous-préfecture,57227,Non
+Boulay-moselle,49.184399380404834,6.4963218074680942,Grand Est,Moselle,57,Sous-préfecture,57097,Non
+Thionville,49.357910543622069,6.1660980286352931,Grand Est,Moselle,57,Sous-préfecture,57672,Non
+Sarrebourg,48.733737822579137,7.052842915408287,Grand Est,Moselle,57,Sous-préfecture,57630,Non
+Sarreguemines,49.111839925217282,7.071828952295788,Grand Est,Moselle,57,Sous-préfecture,57631,Non
+Château-Salins,48.82080790917351,6.5097855246789242,Grand Est,Moselle,57,Sous-préfecture,57132,Non
+Château-Chinon (ville),47.064390730822048,3.933476109671556,Bourgogne-Franche-Comté,Nièvre,58,Sous-préfecture,58062,Non
+Nevers,46.988613081933913,3.15989311264839,Bourgogne-Franche-Comté,Nièvre,58,Préfecture,58194,Non
+Cosne-cours-sur-loire,47.41217627607918,2.9246106480328771,Bourgogne-Franche-Comté,Nièvre,58,Sous-préfecture,58086,Non
+Clamecy,47.460254876094986,3.5195724714071379,Bourgogne-Franche-Comté,Nièvre,58,Sous-préfecture,58079,Non
+Saint-Saulge,47.115563,3.504337,Bourgogne-Franche-Comté,Nièvre,58,Centroïde,58267,Oui
+Lille,50.6299309661142,3.062322331292969,Hauts-de-France,Nord,59,Préfecture de région,59350,Non
+Douai,50.375456709197287,3.0919774085397251,Hauts-de-France,Nord,59,Sous-préfecture,59178,Non
+Valenciennes,50.359283009563683,3.5234507416179373,Hauts-de-France,Nord,59,Sous-préfecture,59606,Non
+Avesnes-sur-helpe,50.124155149747637,3.92964143302366,Hauts-de-France,Nord,59,Sous-préfecture,59036,Non
+Cambrai,50.174216091846318,3.234536464683373,Hauts-de-France,Nord,59,Sous-préfecture,59122,Non
+Dunkerque,51.035069609431154,2.377200759523769,Hauts-de-France,Nord,59,Sous-préfecture,59183,Non
+Coutiches,50.44758,3.215691,Hauts-de-France,Nord,59,Centroïde,59158,Oui
+Compiègne,49.408332453885855,2.821494624016307,Hauts-de-France,Oise,60,Sous-préfecture,60159,Non
+Beauvais,49.431280305431457,2.08479942234391,Hauts-de-France,Oise,60,Préfecture,60057,Non
+Clermont,49.379581791572818,2.41268544241639,Hauts-de-France,Oise,60,Sous-préfecture,60157,Non
+Senlis,49.206423469292339,2.583449265207717,Hauts-de-France,Oise,60,Sous-préfecture,60612,Non
+Fitz-James,49.410148,2.425743,Hauts-de-France,Oise,60,Centroïde,60234,Oui
+Alençon,48.430808557515171,0.086619129998941,Normandie,Orne,61,Préfecture,61001,Non
+Argentan,48.745579796829929,-0.02198813189826,Normandie,Orne,61,Sous-préfecture,61006,Non
+Mortagne-au-perche,48.521542203341987,0.54846327843655307,Normandie,Orne,61,Sous-préfecture,61293,Non
+Arras,50.29158452394605,2.775516298656199,Hauts-de-France,Pas-de-Calais,62,Préfecture,62041,Non
+Calais,50.946791520209771,1.8643674598542821,Hauts-de-France,Pas-de-Calais,62,Sous-préfecture,62193,Non
+Montreuil,50.465348388321416,1.7649863244749362,Hauts-de-France,Pas-de-Calais,62,Sous-préfecture,62588,Non
+Béthune,50.526967547845288,2.6441121367788432,Hauts-de-France,Pas-de-Calais,62,Sous-préfecture,62119,Non
+Boulogne-sur-mer,50.723376559160883,1.6068674665878619,Hauts-de-France,Pas-de-Calais,62,Sous-préfecture,62160,Non
+Lens,50.430996666716574,2.8310839532472341,Hauts-de-France,Pas-de-Calais,62,Sous-préfecture,62498,Non
+Saint-Omer,50.750331385580388,2.257588621635974,Hauts-de-France,Pas-de-Calais,62,Sous-préfecture,62765,Non
+Riom,45.893385517907845,3.1126172004522328,Auvergne-Rhône-Alpes,Puy-de-Dôme,63,Sous-préfecture,63300,Non
+Issoire,45.544467828807967,3.2485716701720082,Auvergne-Rhône-Alpes,Puy-de-Dôme,63,Sous-préfecture,63178,Non
+Thiers,45.857297889039941,3.5416934867412357,Auvergne-Rhône-Alpes,Puy-de-Dôme,63,Sous-préfecture,63430,Non
+Clermont-Ferrand,45.779471974489361,3.0884905761710688,Auvergne-Rhône-Alpes,Puy-de-Dôme,63,Préfecture de région,63113,Non
+Ambert,45.550112012785512,3.7423596609524208,Auvergne-Rhône-Alpes,Puy-de-Dôme,63,Sous-préfecture,63003,Non
+Pau,43.300610054785068,-0.369120660779204,Nouvelle-Aquitaine,Pyrénées-Atlantiques,64,Préfecture,64445,Non
+Oloron-sainte-Marie,43.193668605753935,-0.606938694458748,Nouvelle-Aquitaine,Pyrénées-Atlantiques,64,Sous-préfecture,64422,Non
+Bayonne,43.492052086603259,-1.475503887118268,Nouvelle-Aquitaine,Pyrénées-Atlantiques,64,Sous-préfecture,64102,Non
+Tarbes,43.233708052383427,0.073336348244835,Occitanie,Hautes-Pyrénées,65,Préfecture,65440,Non
+Bagnères-de-Bigorre,43.069932866657652,0.151031883384562,Occitanie,Hautes-Pyrénées,65,Sous-préfecture,65059,Non
+Argelès-Gazost,43.004635630478553,-0.09637480475226,Occitanie,Hautes-Pyrénées,65,Sous-préfecture,65025,Non
+Perpignan,42.695094168919717,2.893950147914929,Occitanie,Pyrénées-Orientales,66,Préfecture,66136,Non
+Céret,42.4874622959552,2.7504060954271168,Occitanie,Pyrénées-Orientales,66,Sous-préfecture,66049,Non
+Prades,42.6160280673062,2.422024802020124,Occitanie,Pyrénées-Orientales,66,Sous-préfecture,66149,Non
+Saverne,48.74044761032021,7.3622253526258383,Grand Est,Bas-Rhin,67,Sous-préfecture,67437,Non
+Molsheim,48.53989452183658,7.49287264351396,Grand Est,Bas-Rhin,67,Sous-préfecture,67300,Non
+Wissembourg,49.036527046675381,7.9446861423423361,Grand Est,Bas-Rhin,67,Sous-préfecture,67544,Non
+Strasbourg,48.585217460500026,7.7366311375290664,Grand Est,Bas-Rhin,67,Préfecture de région,67482,Non
+Haguenau,48.815458746344113,7.789332880379467,Grand Est,Bas-Rhin,67,Sous-préfecture,67180,Non
+Sélestat,48.258654293323453,7.4554158180080989,Grand Est,Bas-Rhin,67,Sous-préfecture,67462,Non
+Schnersheim,48.671403,7.552208,Grand Est,Bas-Rhin,67,Centroïde,67452,Oui
+Thann,47.810392777674345,7.1026336868788373,Grand Est,Haut-Rhin,68,Sous-préfecture,68334,Non
+Guebwiller,47.908983793346735,7.2124999205424238,Grand Est,Haut-Rhin,68,Sous-préfecture,68112,Non
+Mulhouse,47.752382885091329,7.3358326147496431,Grand Est,Haut-Rhin,68,Sous-préfecture,68224,Non
+Colmar,48.078177377096317,7.3561193546748962,Grand Est,Haut-Rhin,68,Préfecture,68066,Non
+Altkirch,47.623836969846117,7.2394482224090471,Grand Est,Haut-Rhin,68,Sous-préfecture,68004,Non
+Ribeauville,48.192171583036682,7.3266922633855796,Grand Est,Haut-Rhin,68,Sous-préfecture,68269,Non
+Feldkirch,47.859262,7.273442,Grand Est,Haut-Rhin,68,Centroïde,68088,Oui
+Villefranche-sur-saône,45.986469845142608,4.7189235342504174,Auvergne-Rhône-Alpes,Rhône,69,Sous-préfecture,69264,Non
+Lyon,45.762361331068668,4.8345149032528116,Auvergne-Rhône-Alpes,Rhône,69,Préfecture de région,69123,Non
+Châtillon,45.871294,4.641109,Auvergne-Rhône-Alpes,Rhône,69,Centroïde,69050,Oui
+Vesoul,47.621588890804354,6.1563600364234992,Bourgogne-Franche-Comté,Haute-Saône,70,Préfecture,70550,Non
+Lure,47.685080986776207,6.4984169635950684,Bourgogne-Franche-Comté,Haute-Saône,70,Sous-préfecture,70310,Non
+Montigny-lès-Vesoul,47.641421,6.087435,Bourgogne-Franche-Comté,Haute-Saône,70,Centroïde,70363,Oui
+Châlon-sur-saône,46.788098828464712,4.8512447175731186,Bourgogne-Franche-Comté,Saône-et-Loire,71,Sous-préfecture,71076,Non
+Louhans,46.629993067114832,5.2233814916982837,Bourgogne-Franche-Comté,Saône-et-Loire,71,Sous-préfecture,71263,Non
+Charolles,46.434521026034957,4.2761442146747024,Bourgogne-Franche-Comté,Saône-et-Loire,71,Sous-préfecture,71106,Non
+Autun,46.958544686982258,4.2980582127875744,Bourgogne-Franche-Comté,Saône-et-Loire,71,Sous-préfecture,71014,Non
+Mâcon,46.304138582127962,4.8311345250744369,Bourgogne-Franche-Comté,Saône-et-Loire,71,Préfecture,71270,Non
+Mamers,48.350546272118713,0.372297006671646,Pays de la Loire,Sarthe,72,Sous-préfecture,72180,Non
+Le Mans,47.985644684251483,0.192800972414404,Pays de la Loire,Sarthe,72,Préfecture,72181,Non
+La Flèche,47.702428227937567,-0.076374122364969,Pays de la Loire,Sarthe,72,Sous-préfecture,72154,Non
+Chambéry,45.565644948142456,5.9217648077895095,Auvergne-Rhône-Alpes,Savoie,73,Préfecture,73065,Non
+Saint-Jean-de-Maurienne,45.2751722546702,6.3493260415990527,Auvergne-Rhône-Alpes,Savoie,73,Sous-préfecture,73248,Non
+Albertville,45.66933948352218,6.3849231143417136,Auvergne-Rhône-Alpes,Savoie,73,Sous-préfecture,73011,Non
+Annecy,45.911982242304816,6.1255079678685709,Auvergne-Rhône-Alpes,Haute-Savoie,74,Préfecture,74010,Non
+Saint-Julien-en-Genevois,46.143541603170149,6.0816046369283283,Auvergne-Rhône-Alpes,Haute-Savoie,74,Sous-préfecture,74243,Non
+Bonneville,46.076812226322431,6.4063121816542283,Auvergne-Rhône-Alpes,Haute-Savoie,74,Sous-préfecture,74042,Non
+Thonon-les-bains,46.3713767462722,6.4809721249806724,Auvergne-Rhône-Alpes,Haute-Savoie,74,Sous-préfecture,74281,Non
+Brizon,46.035031,6.427996,Auvergne-Rhône-Alpes,Haute-Savoie,74,Centroïde,74049,Oui
+Paris,48.85680577863117,2.3447016591934542,Ile-de-France,Paris,75,Capitale,75056,Non
+Dieppe,49.925772260143447,1.0758631146172191,Normandie,Seine-Maritime,76,Sous-préfecture,76217,Non
+Rouen,49.441977202543811,1.0904044598659279,Normandie,Seine-Maritime,76,Préfecture de région,76540,Non
+Le Havre,49.495075963334365,0.134631663565832,Normandie,Seine-Maritime,76,Sous-préfecture,76351,Non
+Fontainebleau,48.407672932104283,2.699968338739092,Ile-de-France,Seine-et-Marne,77,Sous-préfecture,77186,Non
+Melun,48.541637278502279,2.6588734880647653,Ile-de-France,Seine-et-Marne,77,Préfecture,77288,Non
+Torcy,48.850855813686891,2.649375410713632,Ile-de-France,Seine-et-Marne,77,Sous-préfecture,77468,Non
+Provins,48.558692068656143,3.30080390784553,Ile-de-France,Seine-et-Marne,77,Sous-préfecture,77379,Non
+Meaux,48.957689332880527,2.8826689742762053,Ile-de-France,Seine-et-Marne,77,Sous-préfecture,77284,Non
+Mantes-la-jolie,48.997993359183809,1.700330323964635,Ile-de-France,Yvelines,78,Sous-préfecture,78361,Non
+Versailles,48.804746275774725,2.128281366149503,Ile-de-France,Yvelines,78,Préfecture,78646,Non
+Saint-Germain-en-Laye,48.958553569716152,2.1012336066889952,Ile-de-France,Yvelines,78,Sous-préfecture,78551,Non
+Rambouillet,48.645107910129,1.8332045165554944,Ile-de-France,Yvelines,78,Sous-préfecture,78517,Non
+Vicq,48.815414,1.841634,Ile-de-France,Yvelines,78,Centroïde,78653,Oui
+Bressuire,46.840503962099923,-0.491885711523729,Nouvelle-Aquitaine,Deux-Sèvres,79,Sous-préfecture,79049,Non
+Parthenay,46.646323612570342,-0.244395184111661,Nouvelle-Aquitaine,Deux-Sèvres,79,Sous-préfecture,79202,Non
+Niort,46.323981358394477,-0.460212512230243,Nouvelle-Aquitaine,Deux-Sèvres,79,Préfecture,79191,Non
+Montdidier,49.647936600464661,2.568847929532716,Hauts-de-France,Somme,80,Sous-préfecture,80561,Non
+Amiens,49.893592745571873,2.299450265131727,Hauts-de-France,Somme,80,Préfecture de région,80021,Non
+Abbeville,50.105743545594649,1.8324854302692619,Hauts-de-France,Somme,80,Sous-préfecture,80001,Non
+Péronne,49.926781234601641,2.93204077310263,Hauts-de-France,Somme,80,Sous-préfecture,80620,Non
+Bertangles,49.958245,2.276052,Hauts-de-France,Somme,80,Centroïde,80092,Oui
+Albi,43.926715637741971,2.147476255732661,Occitanie,Tarn,81,Préfecture,81004,Non
+Castres,43.605313348453535,2.2408650805155488,Occitanie,Tarn,81,Sous-préfecture,81065,Non
+Réalmont,43.785591,2.165614,Occitanie,Tarn,81,Centroïde,81222,Oui
+Castelsarrasin,44.0382784944849,1.10691098695067,Occitanie,Tarn-et-Garonne,82,Sous-préfecture,82033,Non
+Montauban,44.019453502828739,1.354057120440789,Occitanie,Tarn-et-Garonne,82,Préfecture,82121,Non
+Villemade,44.085988,1.281057,Occitanie,Tarn-et-Garonne,82,Centroïde,82195,Oui
+Draguignan,43.537860350388165,6.46485692801596,Provence-Alpes-Côte d'Azur,Var,83,Sous-préfecture,83050,Non
+Toulon,43.126717864710933,5.9279665286181444,Provence-Alpes-Côte d'Azur,Var,83,Préfecture,83137,Non
+Brignoles,43.406425986197249,6.0612867694546191,Provence-Alpes-Côte d'Azur,Var,83,Sous-préfecture,83023,Non
+Carpentras,44.053421768292388,5.0464690691339147,Provence-Alpes-Côte d'Azur,Vaucluse,84,Sous-préfecture,84031,Non
+Avignon,43.94806603871568,4.8084624602963277,Provence-Alpes-Côte d'Azur,Vaucluse,84,Préfecture,84007,Non
+Apt,43.876697663317067,5.3970211305288833,Provence-Alpes-Côte d'Azur,Vaucluse,84,Sous-préfecture,84003,Non
+La Roche-sur-Yon,46.67064968383611,-1.4261388959978589,Pays de la Loire,Vendée,85,Préfecture,85191,Non
+Fontenay-le-Comte,46.46722247477269,-0.806659430896393,Pays de la Loire,Vendée,85,Sous-préfecture,85092,Non
+Les Sables-d'Olonne,46.496209751235192,-1.78058592772277,Pays de la Loire,Vendée,85,Sous-préfecture,85194,Non
+Poitiers,46.581776073397926,0.344343865632105,Nouvelle-Aquitaine,Vienne,86,Préfecture de région,86194,Non
+Montmorillon,46.425176791773033,0.87119403491947711,Nouvelle-Aquitaine,Vienne,86,Sous-préfecture,86165,Non
+Châtellerault,46.817876520804418,0.543250118589644,Nouvelle-Aquitaine,Vienne,86,Sous-préfecture,86066,Non
+Rochechouart,45.831870187730154,0.82954816819223909,Nouvelle-Aquitaine,Haute-Vienne,87,Sous-préfecture,87126,Non
+Bellac,46.124185534432691,1.0537439836920059,Nouvelle-Aquitaine,Haute-Vienne,87,Sous-préfecture,87011,Non
+Limoges,45.8364186991017,1.2621209843260679,Nouvelle-Aquitaine,Haute-Vienne,87,Préfecture de région,87085,Non
+Neufchâteau,48.357921233158336,5.6921571083080851,Grand Est,Vosges,88,Sous-préfecture,88321,Non
+Epinal,48.183087125339775,6.4445855467391864,Grand Est,Vosges,88,Préfecture,88160,Non
+Daint-Dié-des-Vosges,48.286132999049038,6.9443026861368242,Grand Est,Vosges,88,Sous-préfecture,88413,Non
+Sens,48.197592681706695,3.283057059934253,Bourgogne-Franche-Comté,Yonne,89,Sous-préfecture,89387,Non
+Avallon,47.489563753869867,3.907089243583115,Bourgogne-Franche-Comté,Yonne,89,Sous-préfecture,89025,Non
+Auxerre,47.79652160243009,3.5708677764476988,Bourgogne-Franche-Comté,Yonne,89,Préfecture,89024,Non
+Belfort,47.643097250279752,6.8562908908217945,Bourgogne-Franche-Comté,Territoire de Belfort,90,Préfecture,90010,Non
+Evry,48.631364082068586,2.4427082960674249,Ile-de-France,Essonne,91,Préfecture,91228,Non
+Etampes,48.434131567148455,2.1575035907268258,Ile-de-France,Essonne,91,Sous-préfecture,91223,Non
+Palaiseau,48.714465056318325,2.2447540653226681,Ile-de-France,Essonne,91,Sous-préfecture,91477,Non
+Antony,48.752068695819162,2.2996383433469818,Ile-de-France,Hauts-de-Seine,92,Sous-préfecture,92002,Non
+Nanterre,48.90158090557405,2.2020966177461991,Ile-de-France,Hauts-de-Seine,92,Préfecture,92050,Non
+Boulogne-Billancourt,48.836950730315642,2.239909428033199,Ile-de-France,Hauts-de-Seine,92,Sous-préfecture,92012,Non
+Le Raincy,48.897438763955,2.519353948316724,Ile-de-France,Seine-Saint-Denis,93,Sous-préfecture,93062,Non
+Saint-Denis,48.935049127097912,2.3543977875830131,Ile-de-France,Seine-Saint-Denis,93,Sous-préfecture,93066,Non
+Bobigny,48.907814716711357,2.4410211938725368,Ile-de-France,Seine-Saint-Denis,93,Préfecture,93008,Non
+Nogent-sur-marne,48.838101333628416,2.483928107741324,Ile-de-France,Val-de-Marne,94,Sous-préfecture,94052,Non
+Créteil,48.778734265792963,2.4411284889163332,Ile-de-France,Val-de-Marne,94,Préfecture,94028,Non
+L'Hay-les-roses,48.777770649828042,2.338400126437199,Ile-de-France,Val-de-Marne,94,Sous-préfecture,94038,Non
+Argenteuil,48.954208643716562,2.2456397648441682,Ile-de-France,Val-d'Oise,95,Sous-préfecture,95018,Non
+Pontoise,49.052114079055521,2.0963783549357942,Ile-de-France,Val-d'Oise,95,Préfecture,95500,Non
+Sarcelles,48.99150508160993,2.3816907739491819,Ile-de-France,Val-d'Oise,95,Sous-préfecture,95585,Non
+Ajaccio,41.92594489325969,8.736636308794866,Corse,Corse-du-Sud,2A,Préfecture de région,2A004,Non
+Sartène,41.619544235431817,8.97168605973251,Corse,Corse-du-Sud,2A,Sous-préfecture,2A272,Non
+Santa-Maria-Siché,41.863586,8.989278,Corse,Corse-du-Sud,2A,Centroïde,2A312,Oui
+Calvi,42.558491002652858,8.7526780726269529,Corse,Haute-Corse,2B,Sous-préfecture,2B050,Non
+Bastia,42.698115107611763,9.4499460560964312,Corse,Haute-Corse,2B,Préfecture,2B033,Non
+Corte,42.304918940720682,9.1615920174013716,Corse,Haute-Corse,2B,Sous-préfecture,2B096,Non

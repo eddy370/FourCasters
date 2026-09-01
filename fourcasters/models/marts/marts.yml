@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: fct_meteo_journaliere
+    description: >
+      Table de faits météorologiques journaliers.
+      Une ligne correspond à une commune et une date.
+
+    columns:
+      - name: row_hash
+        description: "Identifiant technique unique d'une observation commune-date."
+        tests:
+          - not_null
+          - unique
+
+      - name: code_insee
+        description: "Code INSEE de la commune."
+        tests:
+          - not_null
+
+      - name: date
+        description: "Date de l'observation météorologique."
+        tests:
+          - not_null
+
+
+  - name: dim_commune
+    description: >
+      Dimension géographique contenant une ligne par commune.
+
+    columns:
+      - name: code_insee
+        description: "Code INSEE unique de la commune."
+        tests:
+          - not_null
+          - unique
+
+      - name: ville
+        description: "Nom de la commune."
+        tests:
+          - not_null
+
+      - name: departement
+        description: "Numéro du département."
+
+      - name: region
+        description: "Région administrative."
+
+
+  - name: dim_date
+    description: >
+      Dimension temporelle contenant une ligne par date.
+
+    columns:
+      - name: date
+        description: "Date unique."
+        tests:
+          - not_null
+          - unique
+
+      - name: annee
+        description: "Année correspondant à la date."
+
+      - name: trimestre
+        description: "Trimestre de l'année."
+
+      - name: mois
+        description: "Numéro du mois."
+
+      - name: semaine
+        description: "Numéro de semaine."
+
+      - name: jour
+        description: "Jour du mois."
+
+      - name: jour_semaine
+        description: "Numéro du jour de la semaine."

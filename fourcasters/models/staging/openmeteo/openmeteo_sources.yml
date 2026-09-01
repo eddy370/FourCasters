@@ -6,7 +6,7 @@ sources:
     dataset: raw_openmeteo
 
     tables:
-      - name: open_meteo
+      - name: open_meteo_corrigé
         description: >
           Données météorologiques journalières Open-Meteo, du 2000-01-01
           au 2026-08-01. Table RAW : 360 lieux, 3 495 600 lignes. Union de
@@ -14,3 +14,8 @@ sources:
           POI (nom_poi, numero_departement, latitude_poi, longitude_poi,
           267 lieux) et Ville (Ville, Departement, Latitude, Longitude,
           93 lieux).
+
+      - name: meteo_journaliere_raw
+        description: >
+          Données météorologiques journalières Open-Meteo ingérées
+          automatiquement à partir du 2026-08-01.
