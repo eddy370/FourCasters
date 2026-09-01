@@ -5,7 +5,7 @@ seeds:
     description: >
       Référentiel géographique de 360 communes françaises,
       utilisé pour enrichir les données Open-Meteo avec les informations
-      administratives et géographiques.
+      administratives et géographiques (ex : code_INSEE).
 
     columns:
       - name: Commune
