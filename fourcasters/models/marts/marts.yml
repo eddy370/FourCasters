@@ -75,3 +75,91 @@ models:
 
       - name: jour_semaine
         description: "Numéro du jour de la semaine."
+
+
+  - name: dim_station
+    description: >
+      Dimension des stations hydrométriques Hub'Eau. Une ligne
+      correspond à une station ayant au moins une observation HIXnJ
+      dans le périmètre FourCasters (2 022 stations), et non aux 6 470
+      stations du référentiel national Hub'Eau.
+
+    columns:
+      - name: code_station
+        description: "Identifiant unique de la station hydrométrique."
+        tests:
+          - not_null
+          - unique
+
+      - name: code_commune_station
+        description: >
+          Code INSEE de la commune de la station, au même format que
+          dim_commune.code_insee. Peut être null (référentiel national).
+          Pas de test relationships vers dim_commune : une station peut
+          être à <= 15 km d'une commune FourCasters sans lui appartenir
+          administrativement, la couverture n'est donc pas garantie.
+
+      - name: en_service
+        description: "Indique si la station est actuellement en service."
+        tests:
+          - not_null
+
+
+  - name: fct_observation_hydro
+    description: >
+      Table de faits des observations hydrométriques élaborées Hub'Eau.
+      Une ligne correspond à une observation
+      (code_station + date_obs_elab + grandeur_hydro_elab). Seule la
+      grandeur HIXnJ (hauteur instantanée maximale journalière) est
+      disponible pour l'instant.
+
+    columns:
+      - name: row_hash
+        description: >
+          Hash d'identité de l'observation (code_station + date_obs_elab
+          + grandeur_hydro_elab), hérité de stg_hubeau_obs_elab.
+        tests:
+          - not_null
+          - unique
+
+      - name: code_station
+        description: "Identifiant de la station hydrométrique observée."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_station')
+                field: code_station
+
+      - name: date_obs_elab
+        description: "Date de l'observation élaborée."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date
+
+      - name: grandeur_hydro_elab
+        description: "Code de la grandeur hydrométrique observée (HIXnJ pour l'instant)."
+        tests:
+          - not_null
+
+  - name: dim_departement
+    description: >
+      Dimension géographique contenant une ligne par département.
+
+    columns:
+      - name: code_departement
+        description: "Code unique du département."
+        tests:
+          - not_null
+          - unique
+
+      - name: departement
+        description: "Nom du département."
+        tests:
+          - not_null
+
+      - name: region
+        description: "Région administrative."

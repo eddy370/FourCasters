@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: hubeau_raw
+    project: projet-les-fourcasters
+    dataset: raw_hubeau
+
+    tables:
+      - name: stations_hydrometriques
+        description: >
+          Référentiel national des stations hydrométriques Hub'Eau.
+          Grain : 1 ligne par station. Table remplacée intégralement
+          à chaque actualisation (WRITE_TRUNCATE côté ingestion).
+
+      - name: observations_hydrometriques_elaborees
+        description: >
+          Observations hydrométriques élaborées Hub'Eau (obs_elab).
+          Grain : code_station + date_obs_elab + grandeur_hydro_elab.
+          Historique en cours de backfill (2000-01-01 à 2026-09-01) pour
+          la grandeur HIXnJ (hauteur instantanée maximale journalière),
+          uniquement sur les stations pertinentes pour FourCasters
+          (règle des 15 km). Une absence temporaire de dates ou de
+          stations ne signale pas une anomalie tant que le backfill
+          n'est pas terminé.

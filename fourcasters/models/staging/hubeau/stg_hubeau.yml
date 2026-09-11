@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: stg_hubeau_stations
+    description: >
+      Référentiel national des stations hydrométriques Hub'Eau, nettoyé
+      et typé. Une ligne correspond à une station.
+
+    columns:
+      - name: code_station
+        description: "Identifiant unique de la station hydrométrique."
+        tests:
+          - not_null
+          - unique
+
+      - name: code_commune_station
+        description: >
+          Code INSEE de la commune de la station, au même format que
+          dim_commune.code_insee (lpad 5 caractères). Peut être null
+          (quelques stations sans commune associée dans le référentiel
+          Hub'Eau). Pas de test relationships vers dim_commune : le
+          référentiel des stations est national, alors que dim_commune
+          ne couvre que les 360 communes du périmètre FourCasters.
+
+      - name: en_service
+        description: "Indique si la station est actuellement en service."
+        tests:
+          - not_null
+
+  - name: stg_hubeau_obs_elab
+    description: >
+      Observations hydrométriques élaborées Hub'Eau, nettoyées et
+      typées. Une ligne correspond à une observation
+      (code_station + date_obs_elab + grandeur_hydro_elab). Le
+      backfill historique (2000-2026) est en cours : l'absence
+      temporaire de certaines dates ou stations n'est pas une anomalie.
+
+    columns:
+      - name: row_hash
+        description: >
+          Hash d'IDENTITE de l'observation (code_station + date_obs_elab
+          + grandeur_hydro_elab). A ne pas confondre avec le row_hash de
+          la table RAW, qui est un hash de CONTENU utilisé côté
+          ingestion Python pour la déduplication via MERGE.
+        tests:
+          - not_null
+          - unique
+
+      - name: code_station
+        description: "Identifiant de la station hydrométrique observée."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_hubeau_stations')
+                field: code_station
+
+      - name: date_obs_elab
+        description: "Date de l'observation élaborée."
+        tests:
+          - not_null
+
+      - name: grandeur_hydro_elab
+        description: >
+          Code de la grandeur hydrométrique observée. Seule HIXnJ
+          (hauteur instantanée maximale journalière) est ingérée pour
+          l'instant.
+        tests:
+          - not_null
+
+      - name: resultat_obs_elab
+        description: >
+          Valeur de l'observation élaborée. Peut être null lorsque
+          l'observation n'a pas de résultat qualifié (code_statut,
+          code_methode et code_qualification sont alors également nuls).

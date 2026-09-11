@@ -18,10 +18,11 @@ select distinct
         trim(cast(Numero_Departement as string)),
         2,
         '0'
-    ) as departement,
+    ) as numero_departement,
 
     Region as region,
     Latitude as latitude,
-    Longitude as longitude
+    Longitude as longitude,
+    Departement as departement
 
 from {{ ref('referentiel_geographique') }}

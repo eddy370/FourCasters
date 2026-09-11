@@ -68,9 +68,13 @@ from meteo
 
 {% if is_incremental() %}
 
-where date > (
-    select max(date)
-    from {{ this }}
+where date >= date_sub(
+    (
+        select max(date)
+        from {{ this }}
+    ),
+    interval 35 day
 )
 
 {% endif %}
+
