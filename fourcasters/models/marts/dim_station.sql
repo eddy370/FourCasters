@@ -30,8 +30,19 @@ final as (
         s.libelle_cours_eau,
         s.latitude_station,
         s.longitude_station,
-        s.date_ouverture_station,
-        s.date_fermeture_station,
+
+        case
+            when s.date_ouverture_station < timestamp('1900-01-01')
+                then null
+            else date(s.date_ouverture_station)
+        end as date_ouverture_station,
+
+        case
+            when s.date_fermeture_station < timestamp('1900-01-01')
+                then null
+            else date(s.date_fermeture_station)
+        end as date_fermeture_station,
+
         s.en_service
 
     from stations s

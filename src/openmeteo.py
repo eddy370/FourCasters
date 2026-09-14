@@ -37,6 +37,17 @@ MAX_RATE_LIMIT_RETRIES = 6
 PAUSE_RATE_LIMIT_SECONDES = 61
 PAUSE_ENTRE_COMMUNES_SECONDES = 3
 
+# Retry par commune sur les erreurs transitoires (réseau, 5xx, erreurs API
+# ponctuelles type "Something went wrong"). Le rate limit est géré à part
+# (boucle dédiée ci-dessous) et n'entre pas dans ce budget de tentatives.
+MAX_TENTATIVES_COMMUNE = 5
+BACKOFF_COMMUNE_SECONDES = [5, 10, 20, 40]
+
+
+class RateLimitEpuiseError(RuntimeError):
+    """Rate limit Open-Meteo persistant malgré les pauses dédiées."""
+
+
 METEO_VARIABLES = [
     "weather_code",
     "temperature_2m_mean",
@@ -150,8 +161,8 @@ def calculer_date_debut_meteo(derniere_date, date_fin: date) -> str:
     return max(date_revision, date_debut_defaut).strftime("%Y-%m-%d")
 
 
-def appeler_openmeteo(params: dict, commune: str, rate_limit_count: int) -> tuple:
-    """Appelle Open-Meteo en gérant le rate limit."""
+def _appel_http_openmeteo(params: dict, commune: str, rate_limit_count: int) -> tuple:
+    """Un seul cycle d'appel Open-Meteo, avec gestion du rate limit (429)."""
     while True:
         try:
             response = requests.get(OPENMETEO_URL, params=params, timeout=TIMEOUT_HTTP)
@@ -174,10 +185,12 @@ def appeler_openmeteo(params: dict, commune: str, rate_limit_count: int) -> tupl
             rate_limit_count += 1
 
             if rate_limit_count >= MAX_RATE_LIMIT_RETRIES:
-                raise RuntimeError("Trop de rate limits Open-Meteo consécutifs.")
+                raise RateLimitEpuiseError(
+                    "Trop de rate limits Open-Meteo consécutifs."
+                )
 
             logger.warning(
-                f"🚦 Rate limit. Pause {PAUSE_RATE_LIMIT_SECONDES}s "
+                f"🚦 Rate limit pour {commune}. Pause {PAUSE_RATE_LIMIT_SECONDES}s "
                 f"({rate_limit_count}/{MAX_RATE_LIMIT_RETRIES})"
             )
             time.sleep(PAUSE_RATE_LIMIT_SECONDES)
@@ -189,6 +202,49 @@ def appeler_openmeteo(params: dict, commune: str, rate_limit_count: int) -> tupl
             )
 
         return data, 0
+
+
+def appeler_openmeteo(params: dict, commune: str, rate_limit_count: int) -> tuple:
+    """Appelle Open-Meteo pour une commune, avec retry et backoff progressif
+    sur les erreurs transitoires (réseau, erreurs API ponctuelles type
+    "Something went wrong").
+
+    Seule cette commune est réessayée : Hub'Eau et les communes déjà
+    traitées dans ce run ne sont pas affectés par ce retry.
+    """
+    for tentative in range(1, MAX_TENTATIVES_COMMUNE + 1):
+        try:
+            data, rate_limit_count = _appel_http_openmeteo(
+                params, commune, rate_limit_count
+            )
+
+            if tentative > 1:
+                logger.info(
+                    f"✅ {commune} : requête réussie après {tentative} tentatives."
+                )
+
+            return data, rate_limit_count
+
+        except RateLimitEpuiseError:
+            # Rate limit déjà retenté longuement (pauses de 61s) : pas la
+            # peine de reboucler ici, on laisse l'échec remonter.
+            raise
+
+        except RuntimeError as erreur:
+            if tentative >= MAX_TENTATIVES_COMMUNE:
+                logger.error(
+                    f"❌ {commune} : échec définitif après {tentative} tentatives : {erreur}"
+                )
+                raise
+
+            delai = BACKOFF_COMMUNE_SECONDES[tentative - 1]
+            logger.warning(
+                f"⏳ {commune} : tentative {tentative}/{MAX_TENTATIVES_COMMUNE} "
+                f"échouée ({erreur}). Nouvel essai dans {delai}s."
+            )
+            time.sleep(delai)
+
+    raise RuntimeError(f"Échec Open-Meteo pour {commune} après {MAX_TENTATIVES_COMMUNE} tentatives.")
 
 
 def verifier_longueurs_openmeteo(data: dict, commune: str) -> None:
