@@ -1,0 +1,42 @@
+name: Pipeline (ingestion + dbt) 
+ 
+on: 
+  workflow_dispatch: 
+  schedule: 
+    - cron: "0 6 * * *" 
+ 
+jobs: 
+  pipeline: 
+    runs-on: ubuntu-latest 
+ 
+    steps: 
+      - uses: actions/checkout@v5 
+ 
+      - uses: actions/setup-python@v6 
+        with: 
+          python-version: "3.11" 
+ 
+      - run: pip install -r requirements.txt 
+ 
+      - run: echo '${{ secrets.GCP_SA_KEY }}' > "$GITHUB_WORKSPACE/cle_bigquery_fourcasters.json" 
+ 
+      - run: | 
+          mkdir -p ~/.dbt 
+          cat > ~/.dbt/profiles.yml <<EOF 
+          fourcasters: 
+            target: dev 
+            outputs: 
+              dev: 
+                type: bigquery 
+                method: service-account 
+                project: projet-les-fourcasters 
+                dataset: dbt_dev 
+                keyfile: $GITHUB_WORKSPACE/cle_bigquery_fourcasters.json 
+                location: US 
+          EOF 
+
+      - name: Lancer le pipeline 
+        env: 
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/cle_bigquery_fourcasters.json
+      - run: python run_pipeline.py         
+        
