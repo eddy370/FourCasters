@@ -55,7 +55,7 @@ avec_retry(
 logger.info("=== 2. dbt run (raw → staging → marts) ===")
 
 subprocess.run(
-    ["uv", "run", "dbt", "run"],
+    ["dbt", "run"],
     check=True,
     cwd="fourcasters"
 )
