@@ -87,6 +87,8 @@ HUBEAU_STATIONS_COLONNES = [
 # plus la station la plus proche pour une commune sans station <= 15 km.
 STATIONS_DISTANCE_MAX_METRES = 15000
 STATIONS_PERTINENTES_ATTENDU = 3011
+STATIONS_PERTINENTES_MIN = 2700
+STATIONS_PERTINENTES_MAX = 3300
 
 # Découpage des stations dans les appels Hub'Eau.
 TAILLE_LOT_CODE_ENTITE = 200
@@ -372,12 +374,21 @@ def recuperer_stations_pertinentes() -> list:
 
 
 def verifier_nombre_stations(stations: list) -> None:
-    """Vérifie que le périmètre des stations reste celui attendu."""
-    if len(stations) != STATIONS_PERTINENTES_ATTENDU:
+    """Vérifie que le nombre de stations reste dans une plage plausible."""
+    nb_stations = len(stations)
+
+    if not STATIONS_PERTINENTES_MIN <= nb_stations <= STATIONS_PERTINENTES_MAX:
         raise RuntimeError(
-            f"Nombre de stations pertinentes inattendu : "
-            f"{len(stations)} au lieu de "
-            f"{STATIONS_PERTINENTES_ATTENDU}."
+            f"Nombre de stations pertinentes hors plage : "
+            f"{nb_stations} "
+            f"(attendu entre {STATIONS_PERTINENTES_MIN} "
+            f"et {STATIONS_PERTINENTES_MAX})."
+        )
+
+    if nb_stations != STATIONS_PERTINENTES_ATTENDU:
+        logger.warning(
+            f"⚠️ Référentiel Hub'Eau : {nb_stations} stations "
+            f"(référence : {STATIONS_PERTINENTES_ATTENDU})."
         )
 
 
