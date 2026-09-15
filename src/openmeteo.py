@@ -43,6 +43,24 @@ PAUSE_ENTRE_COMMUNES_SECONDES = 3
 MAX_TENTATIVES_COMMUNE = 5
 BACKOFF_COMMUNE_SECONDES = [5, 10, 20, 40]
 
+# NOUVEAU : nombre de communes envoyées dans une requête Open-Meteo.
+TAILLE_PAQUET_COMMUNES = 10
+
+# NOUVEAU : timeout spécifique à Open-Meteo.
+# 5 secondes pour établir la connexion / handshake,
+# 60 secondes pour lire la réponse.
+TIMEOUT_OPENMETEO = (5, 60)
+
+# NOUVEAU : session persistante pour réutiliser les connexions HTTPS.
+SESSION = requests.Session()
+SESSION.mount(
+    "https://",
+    requests.adapters.HTTPAdapter(
+        pool_connections=4,
+        pool_maxsize=8,
+    ),
+)
+
 
 class RateLimitEpuiseError(RuntimeError):
     """Rate limit Open-Meteo persistant malgré les pauses dédiées."""
@@ -165,7 +183,13 @@ def _appel_http_openmeteo(params: dict, commune: str, rate_limit_count: int) -> 
     """Un seul cycle d'appel Open-Meteo, avec gestion du rate limit (429)."""
     while True:
         try:
-            response = requests.get(OPENMETEO_URL, params=params, timeout=TIMEOUT_HTTP)
+            # MODIFIÉ :
+            # session persistante + timeout propre à Open-Meteo.
+            response = SESSION.get(
+                OPENMETEO_URL,
+                params=params,
+                timeout=TIMEOUT_OPENMETEO,
+            )
         except requests.exceptions.RequestException as erreur:
             raise RuntimeError(
                 f"Erreur réseau Open-Meteo pour {commune} : {erreur}"
@@ -176,9 +200,17 @@ def _appel_http_openmeteo(params: dict, commune: str, rate_limit_count: int) -> 
         except ValueError:
             data = {}
 
+        # MODIFIÉ :
+        # en mode paquet, une réponse réussie peut être une liste.
+        reason = (
+            data.get("reason", "")
+            if isinstance(data, dict)
+            else ""
+        )
+
         rate_limited = (
             response.status_code == 429
-            or "limit" in str(data.get("reason", "")).lower()
+            or "limit" in str(reason).lower()
         )
 
         if rate_limited:
@@ -196,9 +228,22 @@ def _appel_http_openmeteo(params: dict, commune: str, rate_limit_count: int) -> 
             time.sleep(PAUSE_RATE_LIMIT_SECONDES)
             continue
 
-        if response.status_code != 200 or data.get("error"):
+        # MODIFIÉ :
+        # data peut être une liste lorsqu'on demande plusieurs coordonnées.
+        api_error = (
+            isinstance(data, dict)
+            and data.get("error")
+        )
+
+        if response.status_code != 200 or api_error:
+            raison = (
+                data.get("reason", response.status_code)
+                if isinstance(data, dict)
+                else response.status_code
+            )
+
             raise RuntimeError(
-                f"Erreur Open-Meteo pour {commune} : {data.get('reason', response.status_code)}"
+                f"Erreur Open-Meteo pour {commune} : {raison}"
             )
 
         return data, 0
@@ -244,7 +289,10 @@ def appeler_openmeteo(params: dict, commune: str, rate_limit_count: int) -> tupl
             )
             time.sleep(delai)
 
-    raise RuntimeError(f"Échec Open-Meteo pour {commune} après {MAX_TENTATIVES_COMMUNE} tentatives.")
+    raise RuntimeError(
+        f"Échec Open-Meteo pour {commune} "
+        f"après {MAX_TENTATIVES_COMMUNE} tentatives."
+    )
 
 
 def verifier_longueurs_openmeteo(data: dict, commune: str) -> None:
@@ -261,7 +309,9 @@ def verifier_longueurs_openmeteo(data: dict, commune: str) -> None:
         valeurs = daily.get(variable)
 
         if valeurs is None:
-            raise RuntimeError(f"Open-Meteo {commune} : variable absente : {variable}.")
+            raise RuntimeError(
+                f"Open-Meteo {commune} : variable absente : {variable}."
+            )
 
         if len(valeurs) != taille_attendue:
             raise RuntimeError(
@@ -309,55 +359,155 @@ def executer_ingestion_openmeteo(batch_id: str) -> int:
     date_fin_str = date_fin.strftime("%Y-%m-%d")
 
     villes = lire_communes()
+
     logger.info(f"Communes à traiter : {len(villes)} (batch {batch_id})")
+
+    # NOUVEAU :
+    # préparation des communes avec leur date de début individuelle.
+    villes_par_date = {}
+
+    for ville in villes:
+        commune = ville["Commune"]
+
+        if ville["code_INSEE"] is None:
+            logger.warning(
+                f"⚠️ code_INSEE manquant pour {commune!r}, commune ignorée."
+            )
+            continue
+
+        date_debut = calculer_date_debut_meteo(
+            ville["max_date"],
+            date_fin,
+        )
+
+        if date_debut > date_fin_str:
+            continue
+
+        # Les communes ayant la même date_debut peuvent être
+        # envoyées ensemble dans la même requête.
+        if date_debut not in villes_par_date:
+            villes_par_date[date_debut] = []
+
+        villes_par_date[date_debut].append(ville)
 
     batch = []
     total_insere = 0
     rate_limit_count = 0
 
-    for index, ville in enumerate(villes, start=1):
-        commune = ville["Commune"]
+    numero_paquet = 0
 
-        if ville["code_INSEE"] is None:
-            logger.warning(f"⚠️ code_INSEE manquant pour {commune!r}, commune ignorée.")
-            continue
+    # NOUVEAU :
+    # traitement par groupes ayant la même date_debut,
+    # puis par paquets de 10 communes.
+    for date_debut, groupe_villes in villes_par_date.items():
 
-        date_debut = calculer_date_debut_meteo(ville["max_date"], date_fin)
+        for debut in range(
+            0,
+            len(groupe_villes),
+            TAILLE_PAQUET_COMMUNES,
+        ):
 
-        if date_debut > date_fin_str:
-            continue
+            paquet = groupe_villes[
+                debut:debut + TAILLE_PAQUET_COMMUNES
+            ]
 
-        logger.debug(
-            f"[{index}/{len(villes)}] {commune} : {date_debut} → {date_fin_str}"
-        )
+            numero_paquet += 1
 
-        params = {
-            "latitude": ville["Latitude"],
-            "longitude": ville["Longitude"],
-            "start_date": date_debut,
-            "end_date": date_fin_str,
-            "daily": ",".join(METEO_VARIABLES),
-            "timezone": "Europe/Paris",
-            "models": "era5_seamless",
-        }
-
-        data, rate_limit_count = appeler_openmeteo(params, commune, rate_limit_count)
-        batch.extend(construire_lignes_meteo(data, ville))
-
-        if len(batch) >= TAILLE_BATCH:
-            total_insere += charger_dans_bigquery(
-                data=batch,
-                table_id=METEO_TABLE_ID,
-                colonne_date="date",
-                batch_id=batch_id,
+            logger.info(
+                f"📦 Paquet {numero_paquet} : "
+                f"{len(paquet)} communes "
+                f"({date_debut} → {date_fin_str})"
             )
 
-            batch = []
+            latitudes = ",".join(
+                str(ville["Latitude"])
+                for ville in paquet
+            )
 
-        time.sleep(PAUSE_ENTRE_COMMUNES_SECONDES)
+            longitudes = ",".join(
+                str(ville["Longitude"])
+                for ville in paquet
+            )
+
+            params = {
+                "latitude": latitudes,
+                "longitude": longitudes,
+                "start_date": date_debut,
+                "end_date": date_fin_str,
+                "daily": ",".join(METEO_VARIABLES),
+                "timezone": "Europe/Paris",
+                "models": "era5_seamless",
+            }
+
+            libelle_paquet = (
+                f"paquet {numero_paquet} "
+                f"({len(paquet)} communes)"
+            )
+
+            data, rate_limit_count = appeler_openmeteo(
+                params,
+                libelle_paquet,
+                rate_limit_count,
+            )
+
+            # Open-Meteo renvoie :
+            # - un dict pour une seule coordonnée
+            # - une liste de dicts pour plusieurs coordonnées
+            if isinstance(data, dict):
+                resultats = [data]
+
+            elif isinstance(data, list):
+                resultats = data
+
+            else:
+                raise RuntimeError(
+                    f"Open-Meteo {libelle_paquet} : "
+                    f"format de réponse inattendu "
+                    f"({type(data).__name__})."
+                )
+
+            # Vérifie qu'on a exactement une réponse par commune.
+            if len(resultats) != len(paquet):
+                raise RuntimeError(
+                    f"Open-Meteo {libelle_paquet} : "
+                    f"{len(paquet)} communes envoyées mais "
+                    f"{len(resultats)} réponses reçues."
+                )
+
+            # On rattache chaque résultat à la commune correspondante.
+            for ville, data_ville in zip(
+                paquet,
+                resultats,
+            ):
+                batch.extend(
+                    construire_lignes_meteo(
+                        data_ville,
+                        ville,
+                    )
+                )
+
+            if len(batch) >= TAILLE_BATCH:
+                total_insere += charger_dans_bigquery(
+                    data=batch,
+                    table_id=METEO_TABLE_ID,
+                    colonne_date="date",
+                    batch_id=batch_id,
+                )
+
+                batch = []
+
+            # Même pause que dans ton script original.
+            time.sleep(PAUSE_ENTRE_COMMUNES_SECONDES)
 
     total_insere += charger_dans_bigquery(
-        data=batch, table_id=METEO_TABLE_ID, colonne_date="date", batch_id=batch_id
+        data=batch,
+        table_id=METEO_TABLE_ID,
+        colonne_date="date",
+        batch_id=batch_id,
+    )
+
+    logger.info(
+        f"📦 Nombre de paquets Open-Meteo envoyés : {numero_paquet}"
     )
 
     return total_insere
@@ -373,6 +523,8 @@ def ingest_openmeteo(batch_id: str) -> None:
         )
 
     except Exception:
-        logger.exception(f"Erreur pendant l'ingestion Open-Meteo (batch {batch_id}).")
+        logger.exception(
+            f"Erreur pendant l'ingestion Open-Meteo (batch {batch_id})."
+        )
         annuler_le_lot(METEO_TABLE_ID, batch_id)
         raise
