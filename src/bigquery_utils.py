@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 # Les journées les plus récentes sont encore provisoires chez les deux sources.
 RECUL_JOURS = 7
 TAILLE_BATCH = 5000
-TIMEOUT_HTTP = 60
+TIMEOUT_HTTP = (5, 60)
 REFERENTIEL_TABLE_ID = "projet-les-fourcasters.dbt_dev.referentiel_geographique"
 
 

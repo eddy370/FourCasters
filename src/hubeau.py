@@ -32,6 +32,9 @@ TAILLE_PAGE_API = 1000
 MAX_TENTATIVES_RESEAU = 5
 PAUSE_RESEAU_SECONDES = 10
 
+# Codes HTTP transitoires Hub'Eau à retenter.
+CODES_HTTP_RETRY = {429, 500, 502, 503, 504}
+
 HUBEAU_STATIONS_URL = (
     "https://hubeau.eaufrance.fr/api/v2/hydrometrie/referentiel/stations"
 )
@@ -99,35 +102,43 @@ def requete_hubeau_avec_retry(
     params: dict | None,
     libelle: str,
 ) -> requests.Response:
-    """Effectue un GET Hub'Eau avec retry/backoff."""
+    """Effectue un GET Hub'Eau avec retry/backoff sur erreurs réseau et HTTP transitoires."""
     tentative = 0
+    derniere_erreur = None
 
     while True:
         try:
-            return requests.get(
+            response = requests.get(
                 url,
                 params=params,
                 timeout=TIMEOUT_HTTP,
             )
 
+            if response.status_code not in CODES_HTTP_RETRY:
+                return response
+
+            derniere_erreur = f"HTTP {response.status_code}"
+
         except requests.exceptions.RequestException as erreur:
-            tentative += 1
+            derniere_erreur = erreur
 
-            if tentative >= MAX_TENTATIVES_RESEAU:
-                raise RuntimeError(
-                    f"Hub'Eau {libelle} : échec réseau après "
-                    f"{tentative} tentatives ({erreur})."
-                ) from erreur
+        tentative += 1
 
-            pause = PAUSE_RESEAU_SECONDES * tentative
-
-            logger.warning(
-                f"Hub'Eau {libelle} : erreur réseau ({erreur}). "
-                f"Nouvelle tentative dans {pause}s "
-                f"({tentative}/{MAX_TENTATIVES_RESEAU})."
+        if tentative >= MAX_TENTATIVES_RESEAU:
+            raise RuntimeError(
+                f"Hub'Eau {libelle} : échec après "
+                f"{tentative} tentatives ({derniere_erreur})."
             )
 
-            time.sleep(pause)
+        pause = PAUSE_RESEAU_SECONDES * tentative
+
+        logger.warning(
+            f"Hub'Eau {libelle} : {derniere_erreur}. "
+            f"Nouvelle tentative dans {pause}s "
+            f"({tentative}/{MAX_TENTATIVES_RESEAU})."
+        )
+
+        time.sleep(pause)
 
 
 def iterer_pages_hubeau(
