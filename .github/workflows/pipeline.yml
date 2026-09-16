@@ -3,7 +3,7 @@ name: Pipeline (ingestion + dbt)
 on:
   workflow_dispatch:
   schedule:
-  - cron: "3 7 * * *"
+    - cron: "18 7 * * *"
 
 jobs:
   pipeline:
@@ -38,5 +38,5 @@ jobs:
       - name: Lancer le pipeline
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/cle_bigquery_fourcasters.json
-        run: python run_pipeline.py      
+        run: python run_pipeline.py
         
