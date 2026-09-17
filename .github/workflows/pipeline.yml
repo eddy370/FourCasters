@@ -3,7 +3,9 @@ name: Pipeline (ingestion + dbt)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: "20 10 * * *"
+      timezone: "Europe/Paris"
+
 jobs:
   pipeline:
     runs-on: ubuntu-latest
