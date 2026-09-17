@@ -8,8 +8,9 @@ en cas d'erreur.
 import logging
 import time
 from datetime import date, datetime, timedelta
-
 import requests
+from requests.adapters import HTTPAdapter
+
 
 
 from src.bigquery_utils import (
@@ -53,9 +54,10 @@ TIMEOUT_OPENMETEO = (5, 60)
 
 # NOUVEAU : session persistante pour réutiliser les connexions HTTPS.
 SESSION = requests.Session()
+
 SESSION.mount(
     "https://",
-    requests.adapters.HTTPAdapter(
+    HTTPAdapter(
         pool_connections=4,
         pool_maxsize=8,
     ),
