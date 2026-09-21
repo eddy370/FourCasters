@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: stg_onrn_frequence
+    description: >
+      Classe de fréquence d'inondation ONRN par commune, nettoyée (lignes
+      NULL et faux en-tête du RAW exclus). Une ligne correspond à une
+      commune. 34 839 lignes attendues.
+
+    columns:
+      - name: code_insee
+        description: >
+          Code INSEE de la commune (STRING, non modifié). Identifiant
+          unique de la ligne.
+        tests:
+          - not_null
+          - unique
+
+      - name: commune
+        description: "Libellé de la commune."
+
+      - name: classe_frequence
+        description: >
+          Classe de fréquence d'inondation ONRN, conservée telle que
+          fournie (texte, non converti en valeur numérique).
+        tests:
+          - not_null
+
+  - name: stg_onrn_representativite
+    description: >
+      Classe de représentativité ONRN par commune, nettoyée (lignes NULL
+      et faux en-tête du RAW exclus). Une ligne correspond à une commune.
+      35 062 lignes attendues ; l'écart de 223 avec stg_onrn_frequence
+      correspond aux territoires ultramarins (attendu).
+
+    columns:
+      - name: code_insee
+        description: >
+          Code INSEE de la commune (STRING, non modifié). Identifiant
+          unique de la ligne.
+        tests:
+          - not_null
+          - unique
+
+      - name: commune
+        description: "Libellé de la commune."
+
+      - name: classe_representativite
+        description: >
+          Classe de représentativité ONRN, conservée telle que fournie
+          (texte, non converti en valeur numérique).
+        tests:
+          - not_null

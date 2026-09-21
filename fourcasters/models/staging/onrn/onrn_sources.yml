@@ -1,0 +1,23 @@
+version: 2
+
+sources:
+  - name: onrn_raw
+    project: projet-les-fourcasters
+    dataset: raw_onrn
+
+    tables:
+      - name: onrn_frequence_inondation
+        description: >
+          Classe de fréquence d'inondation ONRN par commune. Table RAW :
+          contient 4 937 lignes entièrement NULL et une ligne d'en-tête
+          importée comme donnée (code_insee = 'Code_INSEE'). Après
+          nettoyage : 34 839 communes, 1 ligne par code_insee.
+
+      - name: representativite
+        description: >
+          Classe de représentativité ONRN par commune. Table RAW : mêmes
+          défauts d'import que onrn_frequence_inondation (4 937 lignes
+          NULL et une ligne d'en-tête). Après nettoyage : 35 062
+          communes, 1 ligne par code_insee. L'écart de 223 communes avec
+          la table fréquence correspond aux territoires ultramarins
+          (attendu).
