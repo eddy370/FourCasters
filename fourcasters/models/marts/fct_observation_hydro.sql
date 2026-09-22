@@ -25,7 +25,9 @@ seuils as (
         extract(month from date_obs_elab) as mois,
         approx_quantiles(resultat_obs_elab, 100)[offset(90)] as p90,
         approx_quantiles(resultat_obs_elab, 100)[offset(95)] as p95,
-        approx_quantiles(resultat_obs_elab, 100)[offset(99)] as p99
+        approx_quantiles(resultat_obs_elab, 100)[offset(99)] as p99,
+        count(*) as n_reference,
+        count(distinct extract(year from date_obs_elab)) as n_annees_reference
 
     from obs
 
@@ -58,17 +60,28 @@ final as (
         seuils.p90,
         seuils.p95,
         seuils.p99,
+        seuils.n_reference,
+        seuils.n_annees_reference,
 
         case
-            when seuils.p99 > seuils.p95
-                and obs.resultat_obs_elab >= seuils.p99
-                then 'Exceptionnel'
+            when obs.code_qualification = '20'
+                and obs.code_statut in ('12', '16')
+                and obs.resultat_obs_elab is not null
+                and coalesce(seuils.n_annees_reference, 0) >= 5
 
-            when seuils.p95 > seuils.p90
-                and obs.resultat_obs_elab >= seuils.p95
-                then 'Élevé'
+                then case
+                    when seuils.p99 > seuils.p95
+                        and obs.resultat_obs_elab >= seuils.p99
+                        then 'Exceptionnel'
 
-            else 'Normal'
+                    when seuils.p95 > seuils.p90
+                        and obs.resultat_obs_elab >= seuils.p95
+                        then 'Élevé'
+
+                    else 'Normal'
+                end
+
+            else null
         end as niveau_hydrologique
 
     from obs
