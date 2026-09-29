@@ -84,6 +84,12 @@ Principaux éléments :
 - `fourcasters/seeds/` : données de référence utilisées par dbt.
 - `.github/workflows/` : automatisation du pipeline avec GitHub Actions.
 
+## Modèle de données
+
+Le schéma ci-dessous présente les principales tables du projet et leurs relations.
+
+![Schéma de la base de données](schema_bdd.svg)
+
 ## Sources de données
 
 - **Open-Meteo** : données météorologiques.
@@ -98,5 +104,3 @@ Les données sont chargées dans **Google BigQuery**, puis nettoyées et transfo
 
 Projet réalisé dans le cadre de la formation Data Analyst de la Wild Code School.
 
-Pour toute question concernant le projet :  
-**[Nom / adresse e-mail du contact]**
