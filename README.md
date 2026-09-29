@@ -65,6 +65,9 @@ FourCasters/
 │
 ├── script/
 │
+├── docs/
+│   └── schema_bdd.svg
+│
 ├── .github/
 │   └── workflows/
 │
@@ -83,12 +86,15 @@ Principaux éléments :
 - `fourcasters/models/marts/` : tables finales utilisées pour l'analyse et le tableau de bord.
 - `fourcasters/seeds/` : données de référence utilisées par dbt.
 - `.github/workflows/` : automatisation du pipeline avec GitHub Actions.
+- `docs/` : documentation du projet et schéma du modèle de données.
 
 ## Modèle de données
 
 Le schéma ci-dessous présente les principales tables du projet et leurs relations.
 
-![Schéma de la base de données](schema_bdd.svg)
+<p align="center">
+  <img src="docs/schema_bdd.svg" width="100%">
+</p>
 
 ## Sources de données
 
