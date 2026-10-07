@@ -1,10 +1,16 @@
-name: Pipeline (ingestion + dbt)
+name: Pipeline (ingestion + dbt + prédiction)
 
 on:
   workflow_dispatch:
   schedule:
     - cron: "6 6 * * *"
       timezone: "Europe/Paris"
+
+# Une seule exécution à la fois : le MERGE de predict.py passe par une
+# table de transit unique (ml.predictions_staging).
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
 
 jobs:
   pipeline:
