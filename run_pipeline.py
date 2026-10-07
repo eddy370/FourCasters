@@ -1,4 +1,7 @@
-# run_pipeline.py — ingestion + transformation, en une seule commande
+# run_pipeline.py — ingestion + transformation + prédiction, en une seule commande
+#
+# Chaque étape ne démarre que si la précédente a réussi : une exception
+# (ou un code retour non nul de dbt) arrête le script avec un code d'erreur.
 
 import os
 import sys
@@ -9,6 +12,8 @@ import logging
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from load_data import main as ingest_data
+from predict import predire, dates_max_ingestion
+from google.cloud import bigquery
 
 
 logging.basicConfig(
@@ -50,8 +55,15 @@ avec_retry(
     delai=5
 )
 
+ingestion = dates_max_ingestion(bigquery.Client(project="projet-les-fourcasters"))
+logger.info(
+    "Date max ingestion : Hub'Eau %s, Open-Meteo %s",
+    ingestion["hubeau"],
+    ingestion["openmeteo"]
+)
 
-# 2. Transformation : dbt
+
+# 2. Transformation : dbt (dont marts.ml_features)
 logger.info("=== 2. dbt run (raw → staging → marts) ===")
 
 subprocess.run(
@@ -61,4 +73,21 @@ subprocess.run(
 )
 
 
-logger.info("Pipeline terminé : données ingérées ET transformées.")
+# 3. Contrôle de ml_features avant inférence : unicité (date, station)
+#    et dernière date exploitable
+logger.info("=== 3. dbt test (ml_features) ===")
+
+subprocess.run(
+    ["dbt", "test", "--select", "ml_features"],
+    check=True,
+    cwd="fourcasters"
+)
+
+
+# 4. Inférence : marts.ml_features → ml.predictions (MERGE)
+logger.info("=== 4. Prédiction J+1 (ml_features → ml.predictions) ===")
+
+predire()
+
+
+logger.info("Pipeline terminé : données ingérées, transformées et prédites.")
