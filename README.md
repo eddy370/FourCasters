@@ -64,8 +64,6 @@ Le script `run_pipeline.py` orchestre l'ingestion, les transformations dbt, les 
 - **ONRN (données publiques importées)** : indicateurs historiques liés aux risques naturels et aux inondations.
 - **Référentiels géographiques** : rattachement des stations et observations aux communes et départements.
 
-**NASA FIRMS n'est pas une source utilisée dans le pipeline FourCasters.**
-
 ## Qualité et limites
 
 - L'ingestion prévoit des tentatives supplémentaires sur les erreurs transitoires d'API et une gestion des limites de requêtes.
