@@ -101,7 +101,6 @@ Le schéma ci-dessous présente les principales tables du projet et leurs relati
 - **Open-Meteo** : données météorologiques.
 - **Hub'Eau** : données hydrologiques et observations des cours d'eau.
 - **ONRN** : données relatives aux risques naturels, notamment les inondations.
-- **NASA FIRMS** : données de détection des incendies.
 - **Référentiels géographiques** : données permettant d'identifier et d'enrichir les communes et départements français.
 
 Les données sont chargées dans **Google BigQuery**, puis nettoyées et transformées avec **dbt** avant leur utilisation dans le tableau de bord.
