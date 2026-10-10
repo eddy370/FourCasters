@@ -1,60 +1,116 @@
 # FourCasters
 
-FourCasters est un projet de collecte et d'analyse de données liées aux risques naturels en France.  
-Il centralise plusieurs sources de données publiques dans BigQuery, les transforme avec dbt et les exploite dans un tableau de bord décisionnel.
+**Des données publiques dispersées à un tableau de bord automatisé sur les risques d'inondation en France.**
 
-## Prérequis
+FourCasters est un projet de data engineering, d'analyse et de machine learning. Il collecte des observations hydrologiques et météorologiques, les centralise dans BigQuery, les transforme avec dbt et les restitue dans Power BI. Un modèle de classification estime, pour chaque station couverte, le risque de dépassement d'un repère hydrologique historique à J+1 **par rapport à la dernière journée de données disponible**.
 
-- Python 3.11
-- Un compte Google Cloud Platform
+> **Périmètre et limite importante :** FourCasters est un démonstrateur analytique, **pas un système d'alerte officiel ou en temps réel**. L'ingestion utilise volontairement un recul de 7 jours pour privilégier des données consolidées. La prévision J+1 ne signifie donc pas « demain par rapport à aujourd'hui ».
+
+## Aperçu du résultat
+
+Le tableau de bord Power BI comprend notamment une vue nationale, un historique hydrologique, une analyse départementale, une analyse du risque d'inondation et une page de prévision J+1.
+
+**Captures du tableau de bord : à ajouter** (vue nationale et prévision J+1). Les visuels ne sont pas intégrés ici pour éviter d'afficher des images non vérifiées ou périmées.
+
+## Ce que le projet démontre
+
+- **Collecter et centraliser** des données issues de plusieurs sources publiques.
+- **Automatiser** l'ingestion, les transformations et la génération de prédictions.
+- **Fiabiliser** les traitements avec des contrôles, des reprises sur erreur et une gestion des doublons et des corrections de données.
+- **Transformer** les données brutes en indicateurs exploitables dans un tableau de bord.
+- **Documenter les limites** d'un modèle prédictif et la fraîcheur des données utilisées.
+
+Ces compétences sont transférables à d'autres contextes (reporting opérationnel, suivi qualité, consolidation de données, pilotage logistique). **Ces cas d'usage ne sont pas des fonctionnalités déjà développées dans FourCasters.**
+
+## Résultats et périmètre mesurés
+
+- **247 stations hydrométriques** dans le jeu de données ML historique, selon l'état vérifié du projet au **07/10/2026**.
+- **Environ 1,8 million de lignes** dans le jeu de variables ML reconstruit à cette date.
+- **59 % de rappel sur le jeu de test** pour la détection des dépassements à J+1. Il s'agit d'une métrique d'évaluation du modèle, et non d'une garantie de performance future.
+- Prédiction binaire du dépassement d'un seuil historique **P95**, calculée à partir des données hydrologiques et météorologiques disponibles.
+
+Les chiffres ci-dessus correspondent à un état daté du projet et ne décrivent pas nécessairement le contenu actuel des tables BigQuery.
+
+## Architecture
+
+```text
+Open-Meteo (API) ─┐
+                  ├─> Python (ingestion) ─> BigQuery RAW
+Hub'Eau (API) ────┘                              │
+                                                v
+                                         dbt (staging / marts)
+                                                │
+                                  ┌─────────────┴──────────────┐
+                                  v                            v
+                           Power BI (analyse)          ML (prédiction J+1)
+                                                               │
+                                                               v
+                                                      BigQuery ml.predictions
+                                                               │
+                                                               v
+                                                       Power BI (prévision)
+
+GitHub Actions : exécution planifiée du pipeline
+```
+
+**Technologies :** Python, SQL, Google BigQuery, dbt, GitHub Actions, scikit-learn et Power BI.
+
+Le script `run_pipeline.py` orchestre l'ingestion, les transformations dbt, les tests de `ml_features` et l'inférence ML. Le workflow GitHub Actions permet une exécution planifiée ou manuelle.
+
+## Sources de données
+
+- **Open-Meteo (API)** : observations météorologiques historiques.
+- **Hub'Eau (API)** : stations et observations hydrométriques.
+- **ONRN (données publiques importées)** : indicateurs historiques liés aux risques naturels et aux inondations.
+- **Référentiels géographiques** : rattachement des stations et observations aux communes et départements.
+
+**NASA FIRMS n'est pas une source utilisée dans le pipeline FourCasters.**
+
+## Qualité et limites
+
+- L'ingestion prévoit des tentatives supplémentaires sur les erreurs transitoires d'API et une gestion des limites de requêtes.
+- Les chargements RAW utilisent des empreintes de contenu et des identifiants de lot pour faciliter la déduplication et la traçabilité.
+- Le pipeline exécute des tests dbt avant l'inférence.
+- Le modèle ML est une régression logistique avec imputation, standardisation et pondération des classes. La cible est le dépassement du P95 le lendemain **de la date des observations utilisées**.
+- Les résultats ML sont indicatifs : ils ne prédisent ni les routes coupées, ni les dommages, ni les inondations à une adresse donnée.
+- Le projet dépend de la disponibilité et de la qualité des sources publiques ; l'automatisation ne garantit pas une mise à jour réussie chaque jour.
+
+## Installation et exécution
+
+### Prérequis
+
+- Python 3.11 ou version compatible avec les dépendances installées
 - Un projet Google Cloud avec BigQuery activé
-- Une clé de compte de service permettant l'accès à BigQuery
-- dbt avec l'adaptateur BigQuery
+- Des identifiants GCP disposant des autorisations nécessaires
+- dbt et son adaptateur BigQuery
 - Git
 
-## Installation
-
-Cloner le dépôt :
+### Installation
 
 ```bash
-git clone <URL_DU_DEPOT>
-cd <NOM_DU_DEPOT>
-```
-
-Créer et activer un environnement virtuel :
-
-```bash
+git clone https://github.com/eddy370/FourCasters.git
+cd FourCasters
 python -m venv .venv
-```
-
-Installer les dépendances :
-
-```bash
+# Activer l'environnement virtuel selon votre système
 pip install -r requirements.txt
 ```
 
-Configurer ensuite :
+Configurer les identifiants Google Cloud et le fichier `~/.dbt/profiles.yml` pour votre environnement. **Le dépôt référence des tables et un projet GCP spécifiques : une exécution sur un autre projet nécessite d'adapter cette configuration et les identifiants de tables dans les scripts.**
 
-- la clé de service Google Cloud pour l'accès à BigQuery ;
-- le fichier `profiles.yml` utilisé par dbt.
-
-## Utilisation
-
-Lancer le pipeline avec :
+### Lancement
 
 ```bash
 python run_pipeline.py
 ```
 
-Cette commande lance l'ingestion des données dans BigQuery puis les transformations dbt.
+Cette commande lance l'ingestion, les transformations dbt, les tests ML configurés et les prédictions. Elle nécessite l'accès aux ressources BigQuery attendues et au modèle sérialisé utilisé par `predict.py`.
 
-Le pipeline peut également être exécuté automatiquement avec GitHub Actions.
-
-## Structure du projet
+## Structure du dépôt
 
 ```text
 FourCasters/
-│
+├── .github/workflows/        # Exécution planifiée
+├── docs/                     # Schéma et documentation
 ├── fourcasters/
 │   ├── models/
 │   │   ├── staging/
@@ -62,50 +118,18 @@ FourCasters/
 │   │   └── marts/
 │   ├── seeds/
 │   └── dbt_project.yml
-│
-├── script/
-│
-├── docs/
-│   └── schema_bdd.svg
-│
-├── .github/
-│   └── workflows/
-│
-├── load_data.py
-├── run_pipeline.py
+├── src/                      # Connecteurs API et utilitaires BigQuery
+├── load_data.py              # Ingestion
+├── run_pipeline.py           # Orchestration
+├── predict.py                # Inférence ML
 ├── requirements.txt
 └── README.md
 ```
 
-Principaux éléments :
+### Modèle de données
 
-- `load_data.py` : ingestion et chargement des données dans BigQuery.
-- `run_pipeline.py` : orchestration de l'ingestion et des transformations dbt.
-- `fourcasters/models/staging/` : nettoyage et standardisation des données sources.
-- `fourcasters/models/intermediate/` : transformations et enrichissements intermédiaires.
-- `fourcasters/models/marts/` : tables finales utilisées pour l'analyse et le tableau de bord.
-- `fourcasters/seeds/` : données de référence utilisées par dbt.
-- `.github/workflows/` : automatisation du pipeline avec GitHub Actions.
-- `docs/` : documentation du projet et schéma du modèle de données.
+![Schéma du modèle de données](docs/schema_bdd.svg)
 
-## Modèle de données
+## Contexte
 
-Le schéma ci-dessous présente les principales tables du projet et leurs relations.
-
-<p align="center">
-  <img src="docs/schema_bdd.svg" width="100%">
-</p>
-
-## Sources de données
-
-- **Open-Meteo** : données météorologiques.
-- **Hub'Eau** : données hydrologiques et observations des cours d'eau.
-- **ONRN** : données relatives aux risques naturels, notamment les inondations.
-- **Référentiels géographiques** : données permettant d'identifier et d'enrichir les communes et départements français.
-
-Les données sont chargées dans **Google BigQuery**, puis nettoyées et transformées avec **dbt** avant leur utilisation dans le tableau de bord.
-
-## Contact
-
-Projet réalisé dans le cadre de la formation Data Analyst de la Wild Code School.
-
+Projet collectif réalisé dans le cadre de la formation **Data Analyst de la Wild Code School**. Ce dépôt illustre une chaîne de traitement de bout en bout ; il ne constitue ni un service commercial déployé chez un client, ni une solution officielle de prévention des crues.
