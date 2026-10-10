@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+<title id="title">FourCasters — modèle dimensionnel : faits et dimensions</title>
+<desc id="desc">Vue synthétique du schéma existant. Date est reliée aux faits météo et hydrologiques ; commune aux faits météo ; station aux faits hydrologiques. Département est relié à commune, station et aux faits ONRN. Chaque relation va de un à zéro ou plusieurs. Le modèle SQL du fait ONRN n'est pas versionné.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker></defs>
+<rect width="1200" height="760" rx="16" fill="#ffffff"/>
+<g font-family="Arial, sans-serif">
+<text x="600" y="36" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Modèle dimensionnel : faits et dimensions</text>
+<g fill="none" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow)">
+<path d="M450 116H385V458H350"/>
+<path d="M750 116H815V458H850"/>
+<path d="M210 305V394"/>
+<path d="M990 305V394"/>
+<path d="M450 664H28V250H70"/>
+<path d="M750 664H1172V250H1130"/>
+<path d="M600 608V560"/>
+</g>
+<g fill="#334155" font-size="19">
+<text x="367" y="163" text-anchor="end">1 → 0..n</text>
+<text x="832" y="163">1 → 0..n</text>
+<text x="224" y="355">1 → 0..n</text>
+<text x="1004" y="355">1 → 0..n</text>
+<text x="86" y="693">1 → 0..n</text>
+<text x="986" y="693">1 → 0..n</text>
+<text x="614" y="591">1 → 0..n</text>
+</g>
+<g stroke="#2563eb" stroke-width="2" fill="#eff6ff">
+<rect x="450" y="64" width="300" height="104" rx="10"/>
+<rect x="70" y="204" width="280" height="101" rx="10"/>
+<rect x="850" y="204" width="280" height="101" rx="10"/>
+<rect x="450" y="608" width="300" height="104" rx="10"/>
+</g>
+<g fill="#1e3a8a" font-size="23" font-weight="700" text-anchor="middle">
+<text x="600" y="101">dim_date</text><text x="210" y="239">dim_commune</text>
+<text x="990" y="239">dim_station</text><text x="600" y="646">dim_departement</text>
+</g>
+<g fill="#334155" font-size="21" text-anchor="middle">
+<text x="600" y="137">date</text><text x="210" y="276">code_insee</text>
+<text x="990" y="276">code_station</text><text x="600" y="683">code_departement</text>
+</g>
+<g stroke="#0f766e" stroke-width="2" fill="#f0fdfa">
+<rect x="70" y="394" width="280" height="166" rx="10"/>
+<rect x="850" y="394" width="280" height="166" rx="10"/>
+</g>
+<rect x="450" y="394" width="300" height="166" rx="10" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 5" fill="#f8fafc"/>
+<g fill="#115e59" font-size="21" font-weight="700" text-anchor="middle">
+<text x="210" y="431">fct_meteo_journaliere</text><text x="990" y="431">fct_observation_hydro</text>
+</g>
+<g fill="#334155" font-size="21" text-anchor="middle">
+<text x="210" y="470">Commune × jour</text><text x="210" y="507">Météo journalière</text>
+<text x="990" y="470">Station × jour</text><text x="990" y="507">HIXnJ, P90 / P95 / P99</text>
+</g>
+<g fill="#475569" text-anchor="middle">
+<text x="600" y="428" font-size="21" font-weight="700">fct_onrn_inondation_</text>
+<text x="600" y="452" font-size="21" font-weight="700">departement</text>
+<text x="600" y="490" font-size="21">Agrégats par département</text>
+<text x="600" y="530" font-size="19">SQL non versionné ici</text>
+</g>
+<text x="600" y="746" text-anchor="middle" font-size="18" fill="#475569">Vue synthétique du schéma existant · colonnes détaillées dans le schéma complet</text>
+</g></svg>

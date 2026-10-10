@@ -106,6 +106,16 @@ flowchart TD
 
 **GitHub Actions** orchestre la collecte API, `dbt run`, les tests de `ml_features`, puis l'inférence. Les imports ONRN et la préparation de l'historique sont séparés du traitement quotidien. Le code versionné comporte les couches **staging** et **marts**.
 
+### Modèle de données : faits et dimensions
+
+![Modèle dimensionnel FourCasters : faits météo, hydrologiques et ONRN, dimensions date, commune, station et département](docs/images/schema-dimensionnel.svg)
+
+**[Ouvrir cette vue en taille réelle](https://raw.githubusercontent.com/eddy370/FourCasters/main/docs/images/schema-dimensionnel.svg)** · **[Consulter toutes les colonnes en taille réelle](https://raw.githubusercontent.com/eddy370/FourCasters/main/docs/images/schema-complet.svg)**
+
+Les faits météo et hydrologiques s'appuient sur des dimensions pour les analyses par date, commune et station. La dimension département complète la hiérarchie géographique. Cette vue résume les relations du [schéma détaillé existant](docs/schema_bdd.svg) ; elle ne représente pas l'ensemble du pipeline ou des tables ML.
+
+Le schéma inclut aussi `fct_onrn_inondation_departement`, dont le modèle SQL n'est pas versionné ici. Cette table est distinguée dans la vue ; sa présence ne garantit pas sa reproduction depuis le dépôt.
+
 ### Sources réellement utilisées
 
 | Source | Contenu exploité | Mode de chargement |
@@ -136,8 +146,6 @@ Les transformations rendent les données comparables avant leur restitution :
 - **Tables de faits :** [météo journalière](fourcasters/models/marts/fct_meteo_journaliere.sql) et [observations hydrologiques](fourcasters/models/marts/fct_observation_hydro.sql), avec traitement incrémental sur une fenêtre de révision de 35 jours, partitionnement mensuel et clustering par commune ou station.
 - **Repères hydrologiques :** P90, P95 et P99 calculés par station et mois avec `APPROX_QUANTILES`, à partir des observations de qualification `20` et de statut `12` ou `16`. La classification du mart distingue les niveaux normaux, élevés et exceptionnels, avec au moins cinq années distinctes de référence.
 - **Variables ML :** jointure hydrologie–météo par commune et date, calculs de variation et de cumul de pluie, puis cible J+1 dans [ml_features.sql](fourcasters/models/marts/ml_features.sql). Les jours sans cible future restent disponibles pour l'inférence ; l'entraînement les exclut.
-
-Le [schéma existant des tables](docs/schema_bdd.svg) complète cette lecture. Il inclut des tables ONRN de restitution dont les modèles SQL ne sont pas versionnés ici : sa couverture dépasse celle des modèles disponibles dans le dépôt.
 
 ### Automatisation et traçabilité
 
