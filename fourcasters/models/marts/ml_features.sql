@@ -42,21 +42,37 @@ with stations as (
 
 ),
 
+meteo_jours as (
+
+    -- Une date dupliquée est inexploitable, même si les pluies sont égales.
+    -- Le test d'unicité du mart météo signale ces doublons avant l'inférence.
+    select
+        code_insee,
+        date,
+        case when count(*) = 1 then max(pluie_totale) end as pluie_totale,
+        case when count(*) = 1 then max(humidite_sol_7_28cm) end as humidite_sol_7_28cm
+
+    from {{ ref('fct_meteo_journaliere') }}
+
+    group by code_insee, date
+
+),
+
 meteo as (
 
     select
         code_insee,
         date,
         pluie_totale as pluie_j,
-        -- NULL si un des jours de la fenêtre j-2..j n'a pas de pluie
-        -- (trou amont Open-Meteo) : pas de cumul partiel silencieux.
+        -- Trois dates distinctes ET trois pluies renseignées sur j-2..j.
+        -- Un jour absent, NULL ou dupliqué interdit un cumul partiel.
         case
-            when count(pluie_totale) over w = count(*) over w
+            when count(*) over w = 3 and count(pluie_totale) over w = 3
                 then sum(pluie_totale) over w
         end as pluie_3j,
         humidite_sol_7_28cm as humidite_sol
 
-    from {{ ref('fct_meteo_journaliere') }}
+    from meteo_jours
 
     window w as (
         partition by code_insee

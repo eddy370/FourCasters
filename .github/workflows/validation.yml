@@ -1,0 +1,25 @@
+name: Tests locaux de qualité
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "fourcasters/**"
+      - "run_pipeline.py"
+      - "requirements.txt"
+      - ".github/workflows/validation.yml"
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Vérifier les corrections sans accès GCP
+        run: python -m unittest discover -s tests -v

@@ -73,12 +73,11 @@ subprocess.run(
 )
 
 
-# 3. Contrôle de ml_features avant inférence : unicité (date, station)
-#    et dernière date exploitable
-logger.info("=== 3. dbt test (ml_features) ===")
+# 3. Contrôle du grain météo, de ml_features et de la dernière date exploitable.
+logger.info("=== 3. dbt test (météo + ml_features) ===")
 
 subprocess.run(
-    ["dbt", "test", "--select", "ml_features"],
+    ["dbt", "test", "--select", "ml_features", "fct_meteo_journaliere"],
     check=True,
     cwd="fourcasters"
 )

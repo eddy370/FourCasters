@@ -104,7 +104,7 @@ flowchart TD
     Predictions --> BI
 ```
 
-**GitHub Actions** orchestre la collecte API, `dbt run`, les tests de `ml_features`, puis l'inférence. Les imports ONRN et la préparation de l'historique sont séparés du traitement quotidien. Le code versionné comporte les couches **staging** et **marts**.
+**GitHub Actions** orchestre la collecte API, `dbt run`, les tests météo et de `ml_features`, puis l'inférence. Les imports ONRN et la préparation de l'historique sont séparés du traitement quotidien. Le code versionné comporte les couches **staging** et **marts**.
 
 ### Modèle de données : faits et dimensions
 
@@ -141,6 +141,7 @@ Le schéma inclut aussi `fct_onrn_inondation_departement`, dont le modèle SQL n
 Les transformations rendent les données comparables avant leur restitution :
 
 - **Dernière version par clé métier :** `ROW_NUMBER()` ordonné par date d'insertion dans les stagings [météo](fourcasters/models/staging/openmeteo/stg_openmeteo.sql) et [hydrologie](fourcasters/models/staging/hubeau/stg_hubeau_obs_elab.sql). Une correction reçue en RAW remplace ainsi la version retenue pour l'analyse.
+- **Versions RAW :** le hash reçu est comparé uniquement à la dernière version de la même clé (commune × date pour la météo ; station × date × grandeur pour Hub'Eau). A → A n'ajoute rien ; A → B → A conserve les trois versions et retient le dernier A. Deux contenus contradictoires pour une clé dans un même chargement provoquent une erreur, suivie de l'annulation du lot par l'ingestion.
 - **Normalisation :** conversions de dates et types avec `SAFE_CAST`, nettoyage des libellés et codes INSEE sur cinq caractères. Le staging météo réunit l'historique avant le 01/08/2026 et les mises à jour à partir de cette date.
 - **ONRN :** exclusion des lignes sans code INSEE et de l'en-tête importé comme donnée ; conservation des classes de fréquence et de représentativité dans deux modèles distincts.
 - **Tables de faits :** [météo journalière](fourcasters/models/marts/fct_meteo_journaliere.sql) et [observations hydrologiques](fourcasters/models/marts/fct_observation_hydro.sql), avec traitement incrémental sur une fenêtre de révision de 35 jours, partitionnement mensuel et clustering par commune ou station.
@@ -153,7 +154,7 @@ Les transformations rendent les données comparables avant leur restitution :
 
 1. Collecte des API vers les tables RAW.
 2. Exécution des modèles avec `dbt run`.
-3. Contrôle de `ml_features` avec `dbt test --select ml_features`.
+3. Contrôle de la météo et de `ml_features` avec `dbt test --select ml_features fct_meteo_journaliere`.
 4. Prédiction et écriture dans BigQuery.
 
 Une exception ou un échec dbt arrête la chaîne. La collecte comprend des tentatives supplémentaires, des délais d'attente et une gestion des limitations d'appels. Les lignes chargées portent un `batch_id`, une date d'insertion et une empreinte de contenu SHA-256. Le code prévoit l'annulation du lot de la source concernée en cas d'échec de son ingestion.
@@ -175,7 +176,7 @@ L'inférence utilise exactement cinq variables :
 | `position_p95` | `(hauteur_j - P95) / (P99 - P90)` |
 | `variation_position_1j` | Écart de position entre J et J−1, si les deux jours sont consécutifs |
 | `pluie_j` | Pluie journalière de la commune de la station |
-| `pluie_3j` | Cumul de pluie sur la fenêtre J−2 à J |
+| `pluie_3j` | Cumul J−2 à J, uniquement avec trois dates distinctes et trois pluies renseignées ; une date dupliquée invalide la fenêtre |
 | `humidite_sol` | Humidité du sol à 7–28 cm |
 
 Le champ `mois` est présent dans la table de variables mais ne fait pas partie des cinq entrées du classifieur. La cible `target_j1` utilise `LEAD` et exige que l'observation suivante soit exactement à J+1.
@@ -186,14 +187,21 @@ Le KPI de **59 %** correspond aux **nouveaux franchissements** : station sous le
 
 *Ces résultats proviennent des notebooks de travail du projet, absents de ce dépôt. Le fichier de modèle est versionné ; le protocole d'entraînement et ces métriques ne sont pas encore entièrement reproductibles depuis GitHub.*
 
+**Correction du 11/10/2026 :** les fenêtres de pluie incomplètes, auparavant acceptées si toutes les lignes présentes avaient une pluie, sont désormais exclues de `ml_features`. Cela peut réduire le nombre de jours exploitables, le nombre de stations atteignant le minimum de 100 jours et la couverture du dernier lot. Les volumes historiques ci-dessus et les métriques du 07/10/2026 n'ont pas été recalculés après cette correction ; ils décrivent l'état antérieur. Le classifieur et ses cinq entrées sont conservés.
+
 ### Tests et qualité
 
-Le dépôt contient des tests dbt de **non-nullité, unicité et relations** dans les fichiers YAML, ainsi que deux contrôles SQL spécifiques :
+Le dépôt contient des tests dbt de **non-nullité, unicité et relations** dans les fichiers YAML, ainsi que trois contrôles SQL spécifiques :
 
 - [Unicité station × date](fourcasters/tests/assert_ml_features_unique_station_date.sql).
 - [Présence d'au moins une ligne exploitable à la dernière date](fourcasters/tests/assert_ml_features_derniere_date_inferable.sql).
+- [Unicité commune × date du mart météo](fourcasters/tests/assert_fct_meteo_unique_commune_date.sql).
 
-**Périmètre automatisé :** `run_pipeline.py` exécute les tests sélectionnés sur `ml_features` avant l'inférence. Les autres tests dbt sont définis mais demandent une exécution explicite de `dbt test`. Ces contrôles détectent certaines anomalies ; ils ne garantissent pas l'absence d'erreurs ni la complétude de toutes les stations.
+**Périmètre automatisé :** `run_pipeline.py` exécute les tests sélectionnés sur `ml_features` et `fct_meteo_journaliere` avant l'inférence. Les autres tests dbt sont définis mais demandent une exécution explicite de `dbt test`. Ces contrôles détectent certaines anomalies ; ils ne garantissent pas l'absence d'erreurs ni la complétude de toutes les stations.
+
+Les [tests locaux](tests/) utilisent `unittest` et SQLite, sans clé GCP : cas limites du cumul de pluie, versions RAW pour les deux sources, rejeu, clés indépendantes, doublons et annulation de lot. Ils exécutent le SQL météo extrait du modèle et la requête de sélection RAW, avec les adaptations de dialecte indiquées dans les tests. Le [workflow de validation](.github/workflows/validation.yml) les lance sur les changements de code de `main`. Cela complète les tests BigQuery/dbt sans démontrer l'exécution du pipeline cloud.
+
+Les défauts constatés, les corrections minimales et les vérifications sont détaillés dans la [note de qualité du 11/10/2026](docs/corrections_qualite.md).
 
 ### Limites à connaître
 
@@ -234,6 +242,12 @@ Activer l'environnement avant d'installer les dépendances :
 
 ```bash
 pip install -r requirements.txt
+```
+
+Vérification locale des corrections, sans compte GCP :
+
+```bash
+python -m unittest discover -s tests -v
 ```
 
 Configurer `GOOGLE_APPLICATION_CREDENTIALS` avec le chemin absolu d'une clé locale, conservée hors du dépôt. Exemple de profil dbt, reprenant les paramètres du workflow :
@@ -280,6 +294,7 @@ Pour GitHub Actions, le workflow attend le secret `GCP_SA_KEY` et configure le p
 | [fourcasters/models/](fourcasters/models/) | Transformations staging et marts |
 | [fourcasters/seeds/](fourcasters/seeds/) | Référentiel géographique |
 | [fourcasters/tests/](fourcasters/tests/) | Contrôles SQL des variables ML |
+| [tests/](tests/) | Tests locaux de la pluie et des versions RAW |
 | [notebooks/](notebooks/) | Exploration Open-Meteo versionnée |
 | [docs/](docs/) | Documents du projet et schéma des tables |
 | [docs/images/](docs/images/) | Captures Power BI du portfolio |
