@@ -181,11 +181,11 @@ L'inférence utilise exactement cinq variables :
 
 Le champ `mois` est présent dans la table de variables mais ne fait pas partie des cinq entrées du classifieur. La cible `target_j1` utilise `LEAD` et exige que l'observation suivante soit exactement à J+1.
 
-**Évaluation datée :** le notebook de retest du **07/10/2026** utilise une séparation chronologique, avec entraînement avant le 01/01/2023 et test à partir de cette date. Il rapporte **1 528 444 lignes d'entraînement** et **266 678 lignes de test** avec cible renseignée.
+**Évaluation datée :** le [notebook de retest du **07/10/2026**](notebooks/ml_fourcasters.ipynb) utilise une séparation chronologique, avec entraînement avant le 01/01/2023 et test à partir de cette date. Il rapporte **1 528 444 lignes d'entraînement** et **266 678 lignes de test** avec cible renseignée.
 
 Le KPI de **59 %** correspond aux **nouveaux franchissements** : station sous le P95 à J, puis au-dessus ou au seuil à J+1. Le retest compte **3 007 franchissements détectés sur 5 080**, soit 59,19 %, arrondi à 59 % dans la présentation. Sur ce même périmètre, la précision est de **10,6 %** et le F1 de **17,9 %** : de nombreuses détections sont donc des faux positifs. Ce KPI ne doit pas être étendu à tous les jours déjà au-dessus du seuil.
 
-*Ces résultats proviennent des notebooks de travail du projet, absents de ce dépôt. Le fichier de modèle est versionné ; le protocole d'entraînement et ces métriques ne sont pas encore entièrement reproductibles depuis GitHub.*
+*Le [notebook ML](notebooks/ml_fourcasters.ipynb) contient le code d'entraînement et les sorties enregistrées du retest. Il distingue les évaluations globale et des nouveaux franchissements, ainsi que la comparaison Random Forest antérieure. La réexécution exige Colab et les droits BigQuery ; le jeu historique n'est pas fourni comme export figé. La cellule d'export du retest n'ayant pas été exécutée, la correspondance exacte avec le fichier de modèle versionné n'est pas démontrée.*
 
 **Correction du 11/10/2026 :** les fenêtres de pluie incomplètes, auparavant acceptées si toutes les lignes présentes avaient une pluie, sont désormais exclues de `ml_features`. Cela peut réduire le nombre de jours exploitables, le nombre de stations atteignant le minimum de 100 jours et la couverture du dernier lot. Les volumes historiques ci-dessus et les métriques du 07/10/2026 n'ont pas été recalculés après cette correction ; ils décrivent l'état antérieur. Le classifieur et ses cinq entrées sont conservés.
 
@@ -210,7 +210,7 @@ Les défauts constatés, les corrections minimales et les vérifications sont d�
 - **Interprétation :** un dépassement du P95 ne suffit pas à établir une inondation. Le modèle ne prédit ni routes coupées, ni dommages matériels, ni risque à une adresse précise.
 - **Évaluation :** les seuils du modèle dbt sont calculés sur l'ensemble de l'historique disponible. Une validation prospective avec seuils calculés uniquement sur le passé reste nécessaire pour mesurer une performance réellement prédictive.
 - **Scores :** les probabilités du classifieur pondéré ne disposent pas d'une calibration démontrée ; le seuil de décision et les faux positifs demandent une validation métier.
-- **Reproduction :** imports historiques, notebooks d'entraînement, fichier Power BI et certains marts ONRN ne sont pas intégralement versionnés ici. Les noms de ressources GCP sont liés à l'environnement du projet.
+- **Reproduction :** le notebook ML est versionné avec ses sorties, mais les imports historiques, le jeu figé de ce retest, le fichier Power BI et certains marts ONRN ne sont pas intégralement versionnés ici. Les noms de ressources GCP sont liés à l'environnement du projet.
 
 ### Installation et reproduction
 
@@ -295,7 +295,7 @@ Pour GitHub Actions, le workflow attend le secret `GCP_SA_KEY` et configure le p
 | [fourcasters/seeds/](fourcasters/seeds/) | Référentiel géographique |
 | [fourcasters/tests/](fourcasters/tests/) | Contrôles SQL des variables ML |
 | [tests/](tests/) | Tests locaux de la pluie et des versions RAW |
-| [notebooks/](notebooks/) | Exploration Open-Meteo versionnée |
+| [notebooks/](notebooks/) | Exploration Open-Meteo et entraînement/évaluation ML avec sorties enregistrées |
 | [docs/](docs/) | Documents du projet et schéma des tables |
 | [docs/images/](docs/images/) | Captures Power BI du portfolio |
 | [load_data.py](load_data.py) | Orchestration de la collecte |
