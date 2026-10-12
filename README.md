@@ -1,6 +1,6 @@
 # FourCasters | Hydrologie, météo et tableaux de bord
 
-**Projet collectif réalisé pendant la formation Data Analyst de la Wild Code School.**
+**Projet réalisé pendant la formation Data Analyst de la Wild Code School.**
 
 FourCasters rassemble des observations hydrologiques, des données météo et des indicateurs historiques de sinistres en France. Le projet automatise leur préparation dans BigQuery et les restitue dans Power BI. Une régression logistique explore la détection de dépassements d'un seuil hydrologique à J+1.
 
