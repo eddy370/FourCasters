@@ -111,7 +111,11 @@ Après installation de [requirements.txt](requirements.txt), les contrôles loca
 python -m unittest discover -s tests -v
 ```
 
-Le [workflow de validation](.github/workflows/validation.yml) exécute ces tests sur `main`. Les étapes détaillées, les données historiques nécessaires et les commandes BigQuery/dbt sont dans [reproduction.md](docs/reproduction.md). [corrections_qualite.md](docs/corrections_qualite.md) consigne les défauts corrigés et leurs vérifications.
+Le [workflow de validation](https://github.com/eddy370/FourCasters/actions/runs/38227785621) a réussi le 12/10/2026 : **24 tests locaux**. Le [pipeline cloud du même jour](https://github.com/eddy370/FourCasters/actions/runs/38227785704) a construit **12 modèles**, réussi **49 tests dbt** et écrit **12 prédictions** à partir des données du **05/10**, pour une cible au **06/10**.
+
+Cette dernière journée ne couvre que **12 stations** après les contrôles de qualité. Les 247 stations du retest décrivent le jeu historique ; la disponibilité quotidienne peut être nettement plus faible. Ce résultat vérifie l'exécution et les règles de données, sans actualiser les métriques ML.
+
+Les étapes détaillées, les données historiques nécessaires et les commandes BigQuery/dbt sont dans [reproduction.md](docs/reproduction.md). [corrections_qualite.md](docs/corrections_qualite.md) consigne les défauts corrigés et leurs vérifications.
 
 Les notebooks se trouvent dans [notebooks/](notebooks/). Les scripts historiques de [Script/](Script/) et `src/chargement_openmeteo_historique.py` sont conservés et distincts du traitement quotidien.
 

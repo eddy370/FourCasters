@@ -105,3 +105,17 @@ Le 12/10/2026 : **24 tests locaux réussis**, dépendances installées et vérif
 L'exécution cloud du [11/10/2026](https://github.com/eddy370/FourCasters/actions/runs/38133076421) avait validé les corrections précédentes : 12 modèles, 7 tests et 193 prédictions. Elle ne valide pas les changements du 12/10.
 
 Restent à effectuer après reconstruction : réévaluer le fichier du modèle sur le jeu corrigé et, pour une évaluation prospective, reconstruire les seuils avec les seules observations passées. Dans Power BI, le sous-titre du KPI de 59 % et la lecture des scores de la capture J+1 restent à corriger dans le rapport natif.
+
+
+## Résultat de la vérification cloud du 12/10/2026
+
+Code exécuté : commit `a83f15ab12b1ad078305a9d6ff7811a67376f9ac`.
+
+- [Tests locaux GitHub Actions](https://github.com/eddy370/FourCasters/actions/runs/38227785621) : 24 tests réussis.
+- [Pipeline BigQuery/dbt](https://github.com/eddy370/FourCasters/actions/runs/38227785704) : 12 modèles construits, **49 tests réussis**, aucun test en erreur ou ignoré.
+- Dernières dates RAW et `ml_features` : **05/10/2026** ; cible J+1 : **06/10/2026**.
+- **12 stations et 12 prédictions insérées** pour cette dernière date. Cette faible couverture quotidienne reste une limite à analyser. Les 193 prédictions du 11/10 portaient sur le 04/10 ; les deux exécutions ne constituent pas une comparaison sur une même journée.
+- Le mart hydro a été reconstruit en **22,05 secondes** dans cette exécution (volume lu annoncé par dbt : 1,9 GiB). Ce temps ne représente pas celui de l'ensemble du pipeline et ne garantit pas les exécutions futures.
+- Les logs signalent deux pauses Open-Meteo pour limitation de débit et une reprise Hub'Eau après timeout ; ces mécanismes ont permis la poursuite du traitement.
+
+Les tests de cohérence des seuils et de qualité hydro ont ainsi été exécutés dans BigQuery. Les sorties d'entraînement/test du notebook restent historiques : aucun nouveau rappel, précision ou F1 n'a été calculé.
