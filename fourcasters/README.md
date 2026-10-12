@@ -1,15 +1,18 @@
-Welcome to your new dbt project!
+# Modèles SQL/dbt FourCasters
 
-### Using the starter project
+Ce dossier prépare les données BigQuery du projet collectif FourCasters réalisé à la Wild Code School. La présentation officielle est le [README principal](../README.md).
 
-Try running the following commands:
-- dbt run
-- dbt test
+- `models/staging/` : typage, nettoyage et sélection de la dernière version RAW.
+- `models/marts/` : dimensions, faits météo/hydro et les cinq variables ML avec leur cible J+1.
+- `seeds/` : référentiel géographique.
+- `tests/` : contrôles SQL complémentaires aux tests déclarés dans les fichiers YAML.
 
+Avec le profil BigQuery configuré, depuis la racine du dépôt :
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+```bash
+dbt seed --project-dir fourcasters
+dbt run --project-dir fourcasters
+dbt test --project-dir fourcasters
+```
+
+Le mart hydro est reconstruit pour appliquer des seuils station/mois cohérents à toutes les années. Le mart météo reste incrémental. Les détails d'installation et les imports attendus sont dans [reproduction.md](../docs/reproduction.md).

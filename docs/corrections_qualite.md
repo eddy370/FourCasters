@@ -62,3 +62,46 @@ dbt test --project-dir fourcasters --select ml_features fct_meteo_journaliere
 Vérifier alors : aucun doublon commune/date ou station/date, présence de lignes à la dernière date, volumes/stations/dates de `marts.ml_features`, puis nombre et dates des prédictions dans les logs du pipeline. Une nouvelle évaluation chronologique est nécessaire avant de publier des métriques liées au jeu corrigé.
 
 Les tests locaux sont également exécutés par `.github/workflows/validation.yml` sur les changements de code de `main`, sans secret GCP. Le traitement quotidien conserve son workflow existant.
+
+
+# Corrections ciblées du 12/10/2026
+
+Commit de départ : `bc87ba6effc011f483ede5520f18048b8dd245d7` sur `main`.
+
+## Cas vérifiés et changements
+
+| Point | Comportement constaté | Cas concret | Correction | Vérification |
+| --- | --- | --- | --- | --- |
+| Reprise météo | Une dernière date existante était ignorée au profit de la fenêtre fixe | Dernière date 01/08, fin 04/10 : reprise au 30/08, laissant 28 journées absentes | Début au plus ancien de la fenêtre de révision et du lendemain de la dernière date, avec la borne initiale conservée | Reprise au 02/08 ; une ingestion normale conserve les 35 jours de révision |
+| Reprise Hub'Eau | La fenêtre de 35 jours était identique même après une longue interruption | Dernière date de la source au 01/08 après une interruption | Lire la dernière date HIXnJ de la source et rattraper depuis son lendemain | Paramètres API vérifiés localement, sans réseau |
+| Mart météo | L'incrémental écartait aussi une date ancienne nouvellement récupérée | 02/08 absent du mart alors que sa dernière date est le 04/10 | Ajouter les clés absentes du mart en plus de la fenêtre récente | Le filtre SQL de production accepte le 02/08 absent et écarte une ancienne clé déjà présente |
+| Qualité hydro du ML | Une observation pouvait entrer dans le ML tout en étant non classifiable dans le mart | Qualification différente de 20, statut non accepté ou quatre années de référence | Exiger `niveau_hydrologique IS NOT NULL` dans le CTE de position | Tests de qualification/statut, d'historique court et de dénominateur nul ; contrôle dbt ajouté |
+| Seuils hydro | Seules les journées récentes recevaient les seuils recalculés | Une même station/mois pouvait conserver des seuils différents selon l'année | Matérialiser ce mart en table reconstruite ; calculs et colonnes conservés | Deux dates anciennes/récentes reçoivent le même seuil actualisé dans le test SQL local ; contrôle dbt station/mois ajouté |
+| Dépendances | `pyproject.toml` ne déclarait que dbt | Installation du package sans déclaration des bibliothèques API et ML | Reprendre les neuf versions de `requirements.txt`, puis actualiser `uv.lock` | `pip check`, `uv lock --check` et `uv sync --locked` |
+| Point d'entrée du package | La commande affichait seulement un message d'initialisation | `projet-fourcasters` affichait « Hello from… » | Appeler le `run_pipeline.py` existant depuis la racine | Package construit ; entrée conservée et chemin d'import du pipeline corrigé |
+
+Le mart hydro reconstruit lit et écrit davantage de lignes qu'un incrémental limité à 35 jours. Ce choix simple assure des seuils cohérents dans tout l'historique ; son temps d'exécution et son coût BigQuery sont à suivre dans les exécutions. Les versions RAW, le hash de contenu, les lots et leur annulation sont conservés. Le mart météo reste incrémental.
+
+Une station Hub'Eau sans observations RAW reçoit la fenêtre récente. Le chargement initial de son historique reste distinct. Hub’Eau utilise la dernière date disponible de la source, car une station arrêtée peut conserver une ancienne date sans anomalie. Cette reprise ne vérifie pas les trous propres à une station ou tous les trous internes d’un historique ancien : ceux-ci demandent un contrôle de couverture spécifique.
+
+## Présentation et preuves
+
+- README principal raccourci ; installation détaillée dans `reproduction.md`.
+- Trois nouvelles captures du 12/10/2026 ajoutées sans retouche ; anciennes captures conservées.
+- Commentaires de dialogue remplacés par des commentaires techniques ; modèle dbt initial documenté.
+- Documents Word et scripts historiques conservés avec leur rôle expliqué. Les fichiers Word restent les documents initiaux de formation ; ils ne remplacent pas la présentation actuelle.
+- Sorties, métadonnées et code antérieurs des deux notebooks conservés. Une cellule distincte d'évaluation du modèle sauvegardé est ajoutée sans exécution ni résultat annoncé.
+
+Empreinte SHA-256 du modèle conservé :
+
+`53dc114275320d7e16da5c105cb460599442f3d43e0d0d5376a179f4548fc205`
+
+Les cinq variables, la cible J+1, le classifieur et ses paramètres restent les mêmes. Le filtrage hydro et la correction de pluie peuvent modifier les lignes, les stations, la date exploitable et les résultats d'inférence. **Aucune nouvelle métrique d'entraînement/test n'est publiée.**
+
+## Vérifications
+
+Le 12/10/2026 : **24 tests locaux réussis**, dépendances installées et vérifiées avec pip et uv, conservation des anciennes cellules et sorties des notebooks vérifiée ; analyse dbt réussie (12 modèles, 49 tests définis). Le pipeline lance désormais tous les tests dbt avant l'inférence. Sa vérification cloud est déclenchée sur les changements de code de `main`.
+
+L'exécution cloud du [11/10/2026](https://github.com/eddy370/FourCasters/actions/runs/38133076421) avait validé les corrections précédentes : 12 modèles, 7 tests et 193 prédictions. Elle ne valide pas les changements du 12/10.
+
+Restent à effectuer après reconstruction : réévaluer le fichier du modèle sur le jeu corrigé et, pour une évaluation prospective, reconstruire les seuils avec les seules observations passées. Dans Power BI, le sous-titre du KPI de 59 % et la lecture des scores de la capture J+1 restent à corriger dans le rapport natif.

@@ -8,6 +8,10 @@ on:
       - "tests/**"
       - "fourcasters/**"
       - "run_pipeline.py"
+      - "predict.py"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "notebooks/**"
       - "requirements.txt"
       - ".github/workflows/validation.yml"
   workflow_dispatch:

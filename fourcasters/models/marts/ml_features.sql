@@ -13,7 +13,9 @@
     - pluie_j / pluie_3j    : pluie_totale de la commune de la station,
                               jour j et cumul j-2..j
     - humidite_sol          : humidite_sol_7_28cm de la commune
-    - périmètre             : stations rattachées à une commune de dim_commune
+    - périmètre             : observations classifiables selon les règles hydro
+                              (qualification/statut, au moins cinq ans de référence),
+                              stations rattachées à une commune de dim_commune
                               avec au moins 100 jours exploitables ; jours
                               sans pluie/humidité Open-Meteo écartés
     - depasse_p95_j         : résultat >= p95
@@ -94,6 +96,7 @@ position as (
 
     where o.resultat_obs_elab is not null
         and o.p95 is not null
+        and o.niveau_hydrologique is not null
 
 ),
 
@@ -160,8 +163,8 @@ joint as (
 
 joint_historique as (
 
-    -- Stations avec au moins 100 jours exploitables : écarte les stations
-    -- récentes dont les seuils P90/P95/P99 ne sont pas encore fiables.
+    -- Minimum de 100 jours exploitables après les contrôles hydro et météo.
+    -- La qualité et les cinq années de référence sont vérifiées en amont.
     select *
     from joint
 

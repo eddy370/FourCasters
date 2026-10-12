@@ -1,7 +1,6 @@
 {{
     config(
-        materialized='incremental',
-        unique_key='row_hash',
+        materialized='table',
         partition_by={
             "field": "date_obs_elab",
             "data_type": "date",
@@ -11,6 +10,9 @@
     )
 }}
 
+-- Les seuils évoluent avec l'historique : toutes les observations doivent
+-- recevoir les mêmes seuils station/mois lors d'une actualisation.
+-- Seul ce mart est reconstruit ; les versions RAW restent conservées.
 with obs as (
 
     select *
@@ -94,15 +96,3 @@ final as (
 
 select *
 from final
-
-{% if is_incremental() %}
-
-where date_obs_elab >= date_sub(
-    (
-        select max(date_obs_elab)
-        from {{ this }}
-    ),
-    interval 35 day
-)
-
-{% endif %}

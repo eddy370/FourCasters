@@ -1,6 +1,16 @@
 name: Pipeline (ingestion + dbt + prédiction)
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "fourcasters/**"
+      - "run_pipeline.py"
+      - "predict.py"
+      - "requirements.txt"
+      - "fourcasters_logistic_regression.pkl"
+      - ".github/workflows/pipeline.yml"
   workflow_dispatch:
   schedule:
     - cron: "6 6 * * *"

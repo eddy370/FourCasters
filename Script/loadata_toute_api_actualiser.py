@@ -1,3 +1,6 @@
+# Script de travail historique, hors du pipeline quotidien run_pipeline.py.
+# Les fichiers sources et étapes manuelles sont décrits dans docs/reproduction.md.
+
 """
 Ingestion des données Open-Meteo et Hub'Eau dans BigQuery.
 

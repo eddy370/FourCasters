@@ -80,9 +80,9 @@ models:
   - name: dim_station
     description: >
       Dimension des stations hydrométriques Hub'Eau. Une ligne
-      correspond à une station ayant au moins une observation HIXnJ
-      dans le périmètre FourCasters (2 022 stations), et non aux 6 470
-      stations du référentiel national Hub'Eau.
+      correspond à une station du référentiel Hub'Eau ayant au moins
+      une observation HIXnJ dans le périmètre FourCasters. Les effectifs
+      évoluent avec les observations et le référentiel.
 
     columns:
       - name: code_station

@@ -19,6 +19,7 @@ from src.bigquery_utils import (
     TAILLE_BATCH,
     TIMEOUT_HTTP,
     annuler_le_lot,
+    calculer_date_debut_revision,
     charger_dans_bigquery,
     client,
     extraire_colonnes,
@@ -403,6 +404,20 @@ def verifier_nombre_stations(stations: list) -> None:
         )
 
 
+def recuperer_derniere_date_hubeau():
+    """Dernière date de la source : une station arrêtée ne signale pas une panne."""
+    query = f"""
+        SELECT MAX(date_obs_elab) AS derniere_date
+        FROM `{HUBEAU_OBS_TABLE_ID}`
+        WHERE TRIM(grandeur_hydro_elab) = @grandeur
+    """
+    config = bigquery.QueryJobConfig(query_parameters=[
+        bigquery.ScalarQueryParameter("grandeur", "STRING", HUBEAU_GRANDEUR),
+    ])
+    ligne = next(iter(client.query(query, job_config=config).result()))
+    return ligne.derniere_date
+
+
 def executer_ingestion_hubeau_obs(
     batch_id: str,
 ) -> tuple:
@@ -414,11 +429,10 @@ def executer_ingestion_hubeau_obs(
 
     date_fin = date.today() - timedelta(days=RECUL_JOURS)
 
-    date_debut = date_fin - timedelta(days=HUBEAU_FENETRE_REVISION_JOURS)
-
-    logger.info(
-        f"Hub'Eau obs_elab : " f"{date_debut} → {date_fin} " f"(batch {batch_id})"
+    date_debut = calculer_date_debut_revision(
+        recuperer_derniere_date_hubeau(), date_fin, HUBEAU_FENETRE_REVISION_JOURS
     )
+    logger.info("Hub'Eau obs_elab : %s → %s (batch %s)", date_debut, date_fin, batch_id)
 
     nb_lots = (len(stations) + TAILLE_LOT_CODE_ENTITE - 1) // TAILLE_LOT_CODE_ENTITE
 

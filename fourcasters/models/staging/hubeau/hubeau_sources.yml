@@ -15,10 +15,9 @@ sources:
       - name: observations_hydrometriques_elaborees
         description: >
           Observations hydrométriques élaborées Hub'Eau (obs_elab).
-          Grain : code_station + date_obs_elab + grandeur_hydro_elab.
-          Historique en cours de backfill (2000-01-01 à 2026-09-01) pour
-          la grandeur HIXnJ (hauteur instantanée maximale journalière),
-          uniquement sur les stations pertinentes pour FourCasters
-          (règle des 15 km). Une absence temporaire de dates ou de
-          stations ne signale pas une anomalie tant que le backfill
-          n'est pas terminé.
+          Une clé métier est code_station + date_obs_elab + grandeur_hydro_elab.
+          Plusieurs versions de contenu peuvent être conservées pour cette clé.
+          La grandeur HIXnJ est chargée pour les stations pertinentes (règle des 15 km).
+          Le traitement quotidien relit 35 jours et rattrape les interruptions
+          du chargement quotidien à partir de la dernière date de la source. Le chargement initial de l'historique
+          reste une étape distincte ; sa couverture doit être contrôlée.

@@ -1,5 +1,4 @@
-# Name your project! Project names should contain only lowercase characters
-# and underscores.
+# Projet SQL/dbt FourCasters.
 name: 'fourcasters'
 version: '1.0.0'
 
@@ -17,7 +16,7 @@ clean-targets:
   - "dbt_packages"
 
 
-# Configuring models
+# Matérialisations et datasets des modèles.
 models:
   fourcasters:
     staging:

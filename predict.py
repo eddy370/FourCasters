@@ -130,6 +130,10 @@ def predire() -> int:
 
     logger.info("Nombre de stations à prédire : %s", len(df))
     logger.info("Date J+1 ciblée : %s", date_cible)
+    logger.info(
+        "Âge des données à l'exécution : %s jours (J+1 est relatif aux données).",
+        (datetime.now(timezone.utc).date() - date_features).days
+    )
 
     # Charger le pipeline entraîné (imputer + scaler + régression logistique)
     pipeline = joblib.load(MODELE)

@@ -1,14 +1,22 @@
 [project]
 name = "projet-fourcasters"
 version = "0.1.0"
-description = "Add your description here"
+description = "Projet collectif Wild Code School : données hydrologiques, météo et tableaux de bord Power BI."
 readme = "README.md"
 authors = [
     { name = "Eddy Gabriel", email = "marcmansoncrypto@yahoo.com" }
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "dbt-bigquery>=1.12.0",
+    "dbt-bigquery==1.12.0",
+    "google-cloud-bigquery==3.44.0",
+    "google-cloud-storage==3.1.1",
+    "pandas==3.0.5",
+    "pyarrow==25.0.1",
+    "requests==2.34.2",
+    "python-dotenv==1.2.3",
+    "joblib==1.6.0",
+    "scikit-learn==1.6.1",
 ]
 
 [project.scripts]

@@ -16,7 +16,7 @@ Le staging dbt doit ensuite garder la version la plus récente par clé métier.
 import logging
 import hashlib
 import json
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from dotenv import load_dotenv
 from google.cloud import bigquery
@@ -38,6 +38,14 @@ CLES_METIER_RAW = {
     "date": ("code_INSEE", "date"),
     "date_obs_elab": ("code_station", "date_obs_elab", "grandeur_hydro_elab"),
 }
+
+
+def calculer_date_debut_revision(derniere_date, date_fin: date, jours_revision: int) -> date:
+    """Relit la fenêtre de révision et rattrape une interruption plus longue."""
+    date_revision = date_fin - timedelta(days=jours_revision)
+    if derniere_date is None:
+        return date_revision
+    return min(date_revision, derniere_date + timedelta(days=1))
 
 
 def calculer_hash(row: dict) -> str:

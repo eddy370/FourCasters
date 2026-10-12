@@ -19,6 +19,7 @@ from src.bigquery_utils import (
     TAILLE_BATCH,
     TIMEOUT_HTTP,
     annuler_le_lot,
+    calculer_date_debut_revision,
     charger_dans_bigquery,
     client,
 )
@@ -44,15 +45,15 @@ PAUSE_ENTRE_COMMUNES_SECONDES = 3
 MAX_TENTATIVES_COMMUNE = 5
 BACKOFF_COMMUNE_SECONDES = [5, 10, 20, 40]
 
-# NOUVEAU : nombre de communes envoyées dans une requête Open-Meteo.
+# Communes envoyées dans une même requête Open-Meteo.
 TAILLE_PAQUET_COMMUNES = 10
 
-# NOUVEAU : timeout spécifique à Open-Meteo.
+# Timeout spécifique à Open-Meteo.
 # 5 secondes pour établir la connexion / handshake,
 # 60 secondes pour lire la réponse.
 TIMEOUT_OPENMETEO = (5, 60)
 
-# NOUVEAU : session persistante pour réutiliser les connexions HTTPS.
+# Session persistante pour réutiliser les connexions HTTPS.
 SESSION = requests.Session()
 
 SESSION.mount(
@@ -146,7 +147,6 @@ def creer_table_meteo() -> None:
         CLUSTER BY code_INSEE
         """).result()
 
-    # La table existe déjà dans ton projet :
     # CREATE TABLE IF NOT EXISTS n'ajoute pas une colonne.
     client.query(
         f"ALTER TABLE `{METEO_TABLE_ID}` ADD COLUMN IF NOT EXISTS batch_id STRING"
@@ -176,7 +176,9 @@ def calculer_date_debut_meteo(derniere_date, date_fin: date) -> str:
     if derniere_date is None:
         return date_debut_defaut.strftime("%Y-%m-%d")
 
-    date_revision = date_fin - timedelta(days=METEO_FENETRE_REVISION_JOURS)
+    date_revision = calculer_date_debut_revision(
+        derniere_date, date_fin, METEO_FENETRE_REVISION_JOURS
+    )
 
     return max(date_revision, date_debut_defaut).strftime("%Y-%m-%d")
 
@@ -185,7 +187,6 @@ def _appel_http_openmeteo(params: dict, commune: str, rate_limit_count: int) -> 
     """Un seul cycle d'appel Open-Meteo, avec gestion du rate limit (429)."""
     while True:
         try:
-            # MODIFIÉ :
             # session persistante + timeout propre à Open-Meteo.
             response = SESSION.get(
                 OPENMETEO_URL,
@@ -202,7 +203,6 @@ def _appel_http_openmeteo(params: dict, commune: str, rate_limit_count: int) -> 
         except ValueError:
             data = {}
 
-        # MODIFIÉ :
         # en mode paquet, une réponse réussie peut être une liste.
         reason = (
             data.get("reason", "")
@@ -230,7 +230,6 @@ def _appel_http_openmeteo(params: dict, commune: str, rate_limit_count: int) -> 
             time.sleep(PAUSE_RATE_LIMIT_SECONDES)
             continue
 
-        # MODIFIÉ :
         # data peut être une liste lorsqu'on demande plusieurs coordonnées.
         api_error = (
             isinstance(data, dict)
@@ -364,7 +363,6 @@ def executer_ingestion_openmeteo(batch_id: str) -> int:
 
     logger.info(f"Communes à traiter : {len(villes)} (batch {batch_id})")
 
-    # NOUVEAU :
     # préparation des communes avec leur date de début individuelle.
     villes_par_date = {}
 
@@ -398,7 +396,6 @@ def executer_ingestion_openmeteo(batch_id: str) -> int:
 
     numero_paquet = 0
 
-    # NOUVEAU :
     # traitement par groupes ayant la même date_debut,
     # puis par paquets de 10 communes.
     for date_debut, groupe_villes in villes_par_date.items():
@@ -498,7 +495,7 @@ def executer_ingestion_openmeteo(batch_id: str) -> int:
 
                 batch = []
 
-            # Même pause que dans ton script original.
+            # Espace les appels pour limiter les réponses HTTP 429.
             time.sleep(PAUSE_ENTRE_COMMUNES_SECONDES)
 
     total_insere += charger_dans_bigquery(

@@ -64,7 +64,7 @@ select
     humidite_sol_28_100cm,
     temperature_sol_0_7cm
 
-from meteo
+from meteo m
 
 {% if is_incremental() %}
 
@@ -75,6 +75,10 @@ where date >= date_sub(
     ),
     interval 35 day
 )
+    -- Un rattrapage peut rapporter des dates plus anciennes que la fenêtre.
+    or not exists (
+        select 1 from {{ this }} t where t.row_hash = m.row_hash
+    )
 
 {% endif %}
 

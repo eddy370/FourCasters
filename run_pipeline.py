@@ -9,7 +9,7 @@ import time
 import subprocess
 import logging
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from load_data import main as ingest_data
 from predict import predire, dates_max_ingestion
@@ -73,11 +73,11 @@ subprocess.run(
 )
 
 
-# 3. Contrôle du grain météo, de ml_features et de la dernière date exploitable.
-logger.info("=== 3. dbt test (météo + ml_features) ===")
+# 3. Contrôles des sources transformées, des dimensions et des faits.
+logger.info("=== 3. dbt test (ensemble du projet) ===")
 
 subprocess.run(
-    ["dbt", "test", "--select", "ml_features", "fct_meteo_journaliere"],
+    ["dbt", "test"],
     check=True,
     cwd="fourcasters"
 )

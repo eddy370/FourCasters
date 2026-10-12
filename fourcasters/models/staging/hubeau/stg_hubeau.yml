@@ -31,9 +31,9 @@ models:
     description: >
       Observations hydrométriques élaborées Hub'Eau, nettoyées et
       typées. Une ligne correspond à une observation
-      (code_station + date_obs_elab + grandeur_hydro_elab). Le
-      backfill historique (2000-2026) est en cours : l'absence
-      temporaire de certaines dates ou stations n'est pas une anomalie.
+      (code_station + date_obs_elab + grandeur_hydro_elab). La dernière
+      version RAW est sélectionnée par date d'insertion, puis date de
+      production et hash. La couverture historique reste à contrôler.
 
     columns:
       - name: row_hash
@@ -41,7 +41,8 @@ models:
           Hash d'IDENTITE de l'observation (code_station + date_obs_elab
           + grandeur_hydro_elab). A ne pas confondre avec le row_hash de
           la table RAW, qui est un hash de CONTENU utilisé côté
-          ingestion Python pour la déduplication via MERGE.
+          ingestion Python pour comparer le contenu reçu à la version courante
+          avant un ajout en WRITE_APPEND.
         tests:
           - not_null
           - unique
