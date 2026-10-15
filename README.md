@@ -38,15 +38,14 @@ Python · BigQuery · SQL/dbt · Power BI · GitHub Actions · scikit-learn
 
 ![Scores de dépassement du seuil hydrologique à J+1 dans Power BI](docs/images/prevision-j1-2026-10-09.png)
 
-*Capture du 09/10/2026 : données au 01/10, cible au 02/10. Le KPI de 59 % concerne les nouveaux franchissements du P95. Son sous-titre « épisodes élevés » est trop large et reste à corriger dans Power BI. Les scores du modèle concernent un dépassement hydrologique ; leur calibration n'est pas démontrée.*
+*Capture du 09/10/2026 : données au 01/10, cible au 02/10. Le KPI de 59 % concerne les nouveaux franchissements du P95.*
 
 </details>
 
-Les captures sont conservées telles qu'elles ont été fournies. Le fichier Power BI et les mesures DAX ne sont pas publiés dans ce dépôt.
 
 ## Du traitement à la restitution
 
-La chaîne reste **Python → BigQuery → SQL/dbt → Power BI**, avec GitHub Actions pour l'exécution et scikit-learn pour le ML.
+La chaîne **Python → BigQuery → SQL/dbt → Power BI**, avec GitHub Actions pour l'exécution et scikit-learn pour le ML.
 
 | Étape | Travail réalisé | Code |
 | --- | --- | --- |
