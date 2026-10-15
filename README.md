@@ -2,11 +2,11 @@
 
 [![Pipeline quotidien](https://github.com/eddy370/FourCasters/actions/workflows/pipeline.yml/badge.svg)](https://github.com/eddy370/FourCasters/actions/workflows/pipeline.yml)
 
-**Projet collectif réalisé à quatre pendant la formation Data Analyst de la Wild Code School.**
+**Projet réalisé pendant la formation Data Analyst de la Wild Code School, au sein d'un groupe de quatre.** Le cadrage initial, dont le choix d'Open-Meteo, a été fait collectivement. Ensuite, chacun a avancé de manière autonome sur sa partie du projet.
 
-Comment suivre l'évolution des cours d'eau à partir de données publiques dispersées entre plusieurs organismes ? Avec FourCasters, nous avons construit une chaîne qui rassemble des observations hydrologiques, des données météo et des statistiques historiques de sinistres, puis les rend consultables dans Power BI.
+Comment suivre l'évolution des cours d'eau à partir de données publiques dispersées entre plusieurs organismes ? FourCasters rapproche des observations hydrologiques, des données météo et des statistiques historiques de sinistres, puis les rend consultables dans Power BI.
 
-Nous avons également expérimenté un modèle de machine learning pour repérer les stations susceptibles de franchir un seuil de niveau d'eau élevé le lendemain des dernières données disponibles.
+Mon travail a porté principalement sur le volet hydrologique, sa préparation dans BigQuery/dbt, les indicateurs et tableaux de bord, ainsi que sur l'expérimentation d'un modèle de machine learning pour repérer les stations susceptibles de franchir un seuil de niveau d'eau élevé à J+1.
 
 **Technologies :** Python · SQL · BigQuery · dbt · Power BI · scikit-learn · GitHub Actions
 
@@ -74,9 +74,9 @@ Les règles, incidents rencontrés et corrections apportées sont documentés da
 
 ## Une première prédiction à J+1
 
-Nous avons cherché à prédire si le niveau maximal d'une station atteindrait ou dépasserait le **95e percentile (P95)** de son historique le jour suivant. Ce seuil correspond, pour une station et un mois donnés, à un niveau situé parmi les 5 % d'observations historiques les plus élevées.
+L'objectif de cette partie était de prédire si le niveau maximal d'une station atteindrait ou dépasserait le **95e percentile (P95)** de son historique le jour suivant. Ce seuil correspond, pour une station et un mois donnés, à un niveau situé parmi les 5 % d'observations historiques les plus élevées.
 
-Le modèle utilise cinq variables : le niveau actuel par rapport au seuil, son évolution sur un jour, la pluie du jour, la pluie cumulée sur trois jours et l'humidité du sol. Nous avons choisi une **régression logistique**, avec imputation des valeurs manquantes, standardisation et pondération des classes pour tenir compte de la rareté des dépassements.
+Le modèle utilise cinq variables : le niveau actuel par rapport au seuil, son évolution sur un jour, la pluie du jour, la pluie cumulée sur trois jours et l'humidité du sol. J'ai retenu une **régression logistique**, avec imputation des valeurs manquantes, standardisation et pondération des classes pour tenir compte de la rareté des dépassements.
 
 L'évaluation enregistrée dans le [notebook ML](notebooks/ml_fourcasters.ipynb) porte sur environ **1,8 million de lignes et 247 stations** (2000–2026), avec une séparation chronologique : entraînement avant 2023 et test à partir de 2023.
 
@@ -98,7 +98,7 @@ Les exécutions vérifiées du **12 octobre 2026** ont réussi **24 tests locaux
 
 La couverture varie selon les jours et les contrôles qualité : les 247 stations du jeu historique ne sont pas nécessairement exploitables au quotidien. L'ingestion conserve aussi un recul de sept jours. **J+1 désigne donc le lendemain de la dernière date exploitable**, pas forcément demain à la date de consultation.
 
-## Ce que nous avons appris et les limites
+## Difficultés rencontrées et limites
 
 Le projet a mis en évidence trois difficultés concrètes : maintenir une collecte après une interruption, conserver des données cohérentes lorsque les sources sont corrigées et évaluer correctement un modèle sur des événements rares.
 
