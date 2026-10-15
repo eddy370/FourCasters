@@ -1,121 +1,127 @@
-# FourCasters | Hydrologie, météo et tableaux de bord
+# FourCasters — Explorer les données hydrologiques en France
 
-**Projet réalisé pendant la formation Data Analyst de la Wild Code School.**
+[![Pipeline quotidien](https://github.com/eddy370/FourCasters/actions/workflows/pipeline.yml/badge.svg)](https://github.com/eddy370/FourCasters/actions/workflows/pipeline.yml)
 
-FourCasters rassemble des observations hydrologiques, des données météo et des indicateurs historiques de sinistres en France. Le projet automatise leur préparation dans BigQuery et les restitue dans Power BI. Une régression logistique explore la détection de dépassements d'un seuil hydrologique à J+1.
+**Projet collectif réalisé à quatre pendant la formation Data Analyst de la Wild Code School.**
 
-Python · BigQuery · SQL/dbt · Power BI · GitHub Actions · scikit-learn
+Comment suivre l'évolution des cours d'eau à partir de données publiques dispersées entre plusieurs organismes ? Avec FourCasters, nous avons construit une chaîne qui rassemble des observations hydrologiques, des données météo et des statistiques historiques de sinistres, puis les rend consultables dans Power BI.
 
-[Voir les tableaux de bord](#tableaux-de-bord) · [Voir le notebook ML](notebooks/ml_fourcasters.ipynb) · [Reproduire les traitements](docs/reproduction.md)
+Nous avons également expérimenté un modèle de machine learning pour repérer les stations susceptibles de franchir un seuil de niveau d'eau élevé le lendemain des dernières données disponibles.
+
+**Technologies :** Python · SQL · BigQuery · dbt · Power BI · scikit-learn · GitHub Actions
+
+[Tableaux de bord](#tableaux-de-bord) · [Architecture](#de-la-donnée-brute-aux-indicateurs) · [Machine learning](#une-première-prédiction-à-j1) · [Reproduire les traitements](docs/reproduction.md)
 
 ## Tableaux de bord
+
+Les pages Power BI permettent de passer d'une vue nationale à une analyse par département ou par station, puis d'explorer les résultats de la prédiction à J+1.
 
 ### Vue nationale
 
 ![Vue nationale FourCasters : indicateurs hydrologiques, carte et comparaison départementale](docs/images/vue-nationale-2026-10-12.png)
 
-*Capture du 12/10/2026, année 2010. Les écarts sont exprimés en points de pourcentage par rapport au repère historique de chaque station.*
+*Exemple sur l'année 2010 : les écarts sont calculés par rapport au repère historique propre à chaque station.*
+
+### Prévision à J+1
+
+![Scores de dépassement du seuil hydrologique à J+1 dans Power BI](docs/images/prevision-j1-2026-10-09.png)
+
+*Exemple de scores calculés à partir des données du 1er octobre 2026, pour le 2 octobre. Le taux de détection affiché provient de l'évaluation historique détaillée plus bas.*
 
 <details>
-<summary>Historique hydrologique et analyse départementale</summary>
+<summary>Voir également l'historique hydrologique et l'analyse départementale</summary>
 
 ### Historique hydrologique
 
 ![Historique FourCasters : niveaux hydrologiques, pluie et saisonnalité](docs/images/historique-hydrologique-2026-10-12.png)
 
-*Capture du 12/10/2026, sélection 2012 pour les indicateurs. Les graphiques présentent les séries historiques depuis 2000.*
+*Évolution des niveaux et des précipitations, avec des indicateurs sélectionnés sur 2012 et des séries historiques depuis 2000.*
 
 ### Analyse départementale
 
 ![Analyse départementale FourCasters : Var, sinistres ONRN et historique hydrologique](docs/images/analyse-departementale-2026-10-12.png)
 
-*Capture du 12/10/2026, Var. Le bandeau porte sur 2025 ; le nuage utilise 2013, sélection visible en haut. L'exposition ONRN est une référence historique de 1995 à 2021.*
+*Exemple dans le Var. Les données de sinistres ONRN portent sur 1995–2021 ; les autres visuels suivent les périodes indiquées dans leurs filtres.*
 
 </details>
 
-<details>
-<summary>Prévision J+1 : capture et lecture du résultat</summary>
+## De la donnée brute aux indicateurs
 
-![Scores de dépassement du seuil hydrologique à J+1 dans Power BI](docs/images/prevision-j1-2026-10-09.png)
+Trois sources alimentent le projet :
 
-*Capture du 09/10/2026 : données au 01/10, cible au 02/10. Le KPI de 59 % concerne les nouveaux franchissements du P95.*
+- **[Hub'Eau](https://hubeau.eaufrance.fr/)** fournit les observations de hauteur d'eau des stations hydrométriques.
+- **[Open-Meteo](https://open-meteo.com/)** apporte les précipitations et l'humidité du sol.
+- **L'ONRN** fournit des données historiques de sinistres, utilisées pour compléter l'analyse territoriale.
 
-</details>
+```mermaid
+flowchart LR
+    A["Hub'Eau et Open-Meteo<br/>API"] --> P["Python<br/>collecte"]
+    O["ONRN<br/>fichiers historiques"] --> R["BigQuery<br/>données brutes"]
+    P --> R
+    R --> D["SQL / dbt<br/>nettoyage et modèles"]
+    D --> B["Power BI<br/>tableaux de bord"]
+    D --> F["Variables ML"]
+    F --> M["Régression logistique<br/>predict.py"]
+    M --> Q["BigQuery<br/>prédictions"]
+    Q --> B
+```
 
+Le travail a surtout consisté à **rendre ces données comparables et fiables**. Les sources n'ont ni la même fréquence ni les mêmes identifiants : il a fallu gérer les dates manquantes, les correspondances géographiques, les doublons et les corrections publiées après coup.
 
-## Du traitement à la restitution
+Pour éviter de perdre la trace des modifications, les données brutes sont historisées dans BigQuery. Les modèles dbt construisent ensuite les tables d'analyse et vérifient notamment l'unicité des clés, la cohérence des références et la qualité des observations. Les seuils hydrologiques sont calculés par station et par mois.
 
-La chaîne **Python → BigQuery → SQL/dbt → Power BI**, avec GitHub Actions pour l'exécution et scikit-learn pour le ML.
+Les règles, incidents rencontrés et corrections apportées sont documentés dans [les contrôles de qualité](docs/corrections_qualite.md). Le code est accessible dans [`src/`](src/), [`fourcasters/models/`](fourcasters/models/) et [`fourcasters/tests/`](fourcasters/tests/).
 
-| Étape | Travail réalisé | Code |
-| --- | --- | --- |
-| Collecte | Appels Open-Meteo et Hub'Eau, pagination, gestion des erreurs et reprises | [src/](src/), [load_data.py](load_data.py) |
-| Stockage RAW | Hash de contenu, historique des versions, date d'insertion et identifiant de lot | [bigquery_utils.py](src/bigquery_utils.py) |
-| Préparation | Typage, dernière version par clé, jointures géographiques et tables de faits | [Modèles dbt](fourcasters/models/) |
-| Contrôles | Unicité, références entre tables, qualité hydro et cas limites météo | [Tests SQL](fourcasters/tests/), [tests locaux](tests/) |
-| Restitution | Indicateurs, cartes et exploration dans Power BI | Captures ci-dessus |
-| Inférence | Chargement de la régression logistique et écriture des résultats dans BigQuery | [predict.py](predict.py) |
+## Une première prédiction à J+1
 
-Sources utilisées : [Open-Meteo](https://open-meteo.com/), [Hub'Eau](https://hubeau.eaufrance.fr/) et les fichiers publics ONRN. Le [référentiel géographique](fourcasters/seeds/referentiel_geographique.csv) contient 360 communes ou points d'intérêt.
+Nous avons cherché à prédire si le niveau maximal d'une station atteindrait ou dépasserait le **95e percentile (P95)** de son historique le jour suivant. Ce seuil correspond, pour une station et un mois donnés, à un niveau situé parmi les 5 % d'observations historiques les plus élevées.
 
-Le staging conserve la dernière version RAW de chaque clé métier. Un contenu identique à la version courante est ignoré ; une séquence A → B → A conserve les trois versions. Les ajouts d'un lot peuvent être annulés en cas d'erreur.
+Le modèle utilise cinq variables : le niveau actuel par rapport au seuil, son évolution sur un jour, la pluie du jour, la pluie cumulée sur trois jours et l'humidité du sol. Nous avons choisi une **régression logistique**, avec imputation des valeurs manquantes, standardisation et pondération des classes pour tenir compte de la rareté des dépassements.
 
-Les seuils P90/P95/P99 sont calculés par station et mois sur les observations qualifiées. Le mart hydro est reconstruit à chaque exécution pour appliquer les mêmes seuils actualisés aux journées anciennes et récentes. Les versions RAW sont conservées. Le [schéma dimensionnel](docs/images/schema-dimensionnel.svg) est une vue de travail ; les modèles dbt décrivent les tables actuellement versionnées.
+L'évaluation enregistrée dans le [notebook ML](notebooks/ml_fourcasters.ipynb) porte sur environ **1,8 million de lignes et 247 stations** (2000–2026), avec une séparation chronologique : entraînement avant 2023 et test à partir de 2023.
 
-## Machine learning
-
-**Objectif :** prédire si la hauteur maximale journalière d'une station atteindra ou dépassera son P95 historique le lendemain des données utilisées.
-
-Le modèle conserve cinq variables :
-
-| Variable | Calcul |
-| --- | --- |
-| `position_p95` | Position du niveau à J : `(hauteur − P95) / (P99 − P90)` |
-| `variation_position_1j` | Variation entre J−1 et J, si les jours sont consécutifs |
-| `pluie_j` | Pluie journalière de la commune |
-| `pluie_3j` | Cumul J−2 à J : trois dates distinctes avec une pluie renseignée chacune |
-| `humidite_sol` | Humidité du sol à 7–28 cm |
-
-Le pipeline scikit-learn applique une imputation médiane, une standardisation et une régression logistique avec `class_weight="balanced"`. La cible `target_j1` est calculée avec l'observation exactement à J+1. Les journées sans cible sont exclues de l'entraînement et conservées pour l'inférence.
-
-Le [notebook ML](notebooks/ml_fourcasters.ipynb) contient l'exploration, la séparation chronologique, les sorties d'évaluation et la comparaison avec la persistance. Les sorties enregistrées portent sur un jeu de **1 796 900 lignes et 247 stations**, du 01/01/2000 au 30/09/2026, référencé au 07/10/2026. L'entraînement utilise les dates avant 2023 et le test celles à partir de 2023.
-
-| Évaluation enregistrée | Précision | Rappel | F1 |
+| Ce qui est mesuré | Précision | Rappel | F1 |
 | --- | ---: | ---: | ---: |
-| Régression logistique, tous les dépassements | 32,6 % | 87,7 % | 47,6 % |
-| Persistance, tous les dépassements | 69,9 % | 69,9 % | 69,9 % |
-| Régression logistique, nouveaux franchissements | 10,6 % | 59,19 % | 17,9 % |
+| Modèle, tous les dépassements | 32,6 % | 87,7 % | 47,6 % |
+| Règle de persistance (« demain = aujourd'hui »), tous les dépassements | 69,9 % | 69,9 % | 69,9 % |
+| Modèle, **nouveaux franchissements** du P95 | **10,6 %** | **59,19 %** | **17,9 %** |
 
-Les nouveaux franchissements sont les passages de sous le P95 à J vers le seuil ou au-dessus à J+1 : **3 007 détectés sur 5 080**. La faible précision implique beaucoup de faux positifs. La persistance est meilleure en F1 global ; lorsqu'une station est sous le seuil à J, cette règle prédit zéro et ne détecte aucun nouveau franchissement.
+Pour les nouveaux franchissements (une station sous le seuil à J et au-dessus à J+1), le modèle en a détecté **3 007 sur 5 080**. La règle de persistance ne repère aucun de ces passages, mais elle obtient un meilleur F1 global. La faible précision du modèle signifie aussi **beaucoup de faux positifs**.
 
-Ces résultats précèdent les corrections de pluie et de qualité hydro des 11–12/10/2026. Ils ne sont pas attribués au jeu corrigé ni au fichier `.pkl` chargé par `predict.py`. Le notebook contient une cellule distincte, sans sortie enregistrée, pour évaluer ce fichier avec vérification de son empreinte SHA-256.
+**Précaution importante :** ces métriques proviennent d'une évaluation antérieure aux corrections de qualité des 11–12 octobre 2026. Elles n'ont pas été recalculées sur le jeu corrigé et ne constituent pas une évaluation vérifiée du fichier `.pkl` actuellement utilisé par [`predict.py`](predict.py). Les seuils ont par ailleurs été calculés sur l'ensemble de l'historique : une validation véritablement prospective devra les recalculer en n'utilisant que les données connues à chaque date.
 
-## Automatisation et limites
+## Une chaîne automatisée et testée
 
-[run_pipeline.py](run_pipeline.py) enchaîne collecte, `dbt run`, l'ensemble des tests dbt et inférence. Une étape en erreur arrête la suite. Le [workflow](.github/workflows/pipeline.yml) s'exécute quotidiennement, manuellement et après une modification du code sur `main` ; les exécutions sont sérialisées.
+[GitHub Actions](.github/workflows/pipeline.yml) orchestre chaque jour la collecte, les transformations dbt, les contrôles qualité et le calcul des prédictions. Une étape en échec interrompt le pipeline. Des exécutions manuelles et des déclenchements après certaines modifications du code sont également possibles.
 
-- **Dates :** l'ingestion conserve un recul de sept jours. J+1 désigne le lendemain de la dernière date exploitable, qui peut déjà être passée à la consultation. Les logs indiquent cette date et l'âge des données.
-- **Reprise :** la fenêtre de révision reste de 35 jours ; une interruption plus longue est rattrapée à partir des dates déjà chargées. Hub’Eau utilise une date commune à la source pour éviter de confondre une station arrêtée avec une panne. L'historique initial reste une préparation distincte.
-- **Interprétation :** un dépassement statistique de hauteur ne mesure pas des dommages. Le projet reste une expérimentation de formation, sans fonction d'alerte officielle.
-- **Évaluation :** les seuils utilisent tout l'historique disponible. Une validation prospective devra les calculer avec les seules observations passées et réévaluer le modèle sur les données corrigées.
-- **Couverture :** les règles de qualité et les dates manquantes peuvent réduire le nombre de lignes ou de stations exploitables.
+Les exécutions vérifiées du **12 octobre 2026** ont réussi **24 tests locaux**, construit **12 modèles dbt** et validé **49 tests dbt** : [contrôles locaux](https://github.com/eddy370/FourCasters/actions/runs/38227785621) · [pipeline cloud](https://github.com/eddy370/FourCasters/actions/runs/38227785704).
 
-La méthode de collecte, de contrôle et de reporting peut servir d'exemple pour rapprocher des exports de production, suivre des indicateurs qualité ou consolider des flux logistiques dans une PME. Ces usages n'ont pas été réalisés dans FourCasters.
+La couverture varie selon les jours et les contrôles qualité : les 247 stations du jeu historique ne sont pas nécessairement exploitables au quotidien. L'ingestion conserve aussi un recul de sept jours. **J+1 désigne donc le lendemain de la dernière date exploitable**, pas forcément demain à la date de consultation.
 
-## Vérifications et reproduction
+## Ce que nous avons appris et les limites
 
-Après installation de [requirements.txt](requirements.txt), les contrôles locaux ne demandent aucune clé GCP :
+Le projet a mis en évidence trois difficultés concrètes : maintenir une collecte après une interruption, conserver des données cohérentes lorsque les sources sont corrigées et évaluer correctement un modèle sur des événements rares.
+
+Les prochaines améliorations les plus utiles seraient de réévaluer le modèle sur les données corrigées, de mesurer plus précisément la couverture quotidienne et de réaliser une validation sans information issue du futur. Un dépassement statistique du P95 n'indique pas à lui seul une inondation ou des dommages : **FourCasters est un projet pédagogique et ne constitue pas un système d'alerte officiel**.
+
+## Explorer le code et reproduire le projet
+
+| Besoin | Fichiers |
+| --- | --- |
+| Collecte et suivi des données | [`src/`](src/) · [`load_data.py`](load_data.py) |
+| Transformations et tests | [`fourcasters/models/`](fourcasters/models/) · [`fourcasters/tests/`](fourcasters/tests/) |
+| Entraînement et évaluation ML | [`notebooks/ml_fourcasters.ipynb`](notebooks/ml_fourcasters.ipynb) |
+| Calcul quotidien des scores | [`predict.py`](predict.py) |
+| Orchestration | [`run_pipeline.py`](run_pipeline.py) · [workflow GitHub Actions](.github/workflows/pipeline.yml) |
+| Installation et environnement BigQuery | [`docs/reproduction.md`](docs/reproduction.md) |
+
+Pour exécuter les tests locaux, après installation des dépendances :
 
 ```bash
+pip install -r requirements.txt
 python -m unittest discover -s tests -v
 ```
 
-Le [workflow de validation](https://github.com/eddy370/FourCasters/actions/runs/38227785621) a réussi le 12/10/2026 : **24 tests locaux**. Le [pipeline cloud du même jour](https://github.com/eddy370/FourCasters/actions/runs/38227785704) a construit **12 modèles**, réussi **49 tests dbt** et écrit **12 prédictions** à partir des données du **05/10**, pour une cible au **06/10**.
+Ces tests ne nécessitent pas d'accès à Google Cloud. La reproduction complète demande une configuration BigQuery et des données historiques supplémentaires, détaillées dans le [guide de reproduction](docs/reproduction.md). Le fichier source Power BI n'est pas inclus dans le dépôt ; les captures ci-dessus présentent les principales vues.
 
-Cette dernière journée ne couvre que **12 stations** après les contrôles de qualité. Les 247 stations du retest décrivent le jeu historique ; la disponibilité quotidienne peut être nettement plus faible. Ce résultat vérifie l'exécution et les règles de données, sans actualiser les métriques ML.
-
-Les étapes détaillées, les données historiques nécessaires et les commandes BigQuery/dbt sont dans [reproduction.md](docs/reproduction.md). [corrections_qualite.md](docs/corrections_qualite.md) consigne les défauts corrigés et leurs vérifications.
-
-Les notebooks se trouvent dans [notebooks/](notebooks/). Les scripts historiques de [Script/](Script/) et `src/chargement_openmeteo_historique.py` sont conservés et distincts du traitement quotidien.
-
-Les documents Word de [docs/](docs/) sont les documents initiaux de formation : cahier des charges, éthique, sobriété et dépendances. Ils conservent des intentions et consignes de travail datées. Le cas SDIS est un scénario pédagogique ; aucune mission client n'est revendiquée. Le présent README décrit l'état actuel du dépôt.
+FourCasters a été réalisé dans un cadre de formation. Les éventuelles références au SDIS présentes dans les documents initiaux de [`docs/`](docs/) correspondent à un scénario pédagogique, sans mission commandée par un client.
