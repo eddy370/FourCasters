@@ -24,9 +24,9 @@ Les pages Power BI permettent de passer d'une vue nationale à une analyse par d
 
 ### Prévision à J+1
 
-![Scores de dépassement du seuil hydrologique à J+1 dans Power BI](docs/images/prevision-j1-2026-10-09.png)
+![Prévision J+1 dans Power BI : probabilités de dépassement, départements concernés et carte](docs/images/prevision-j1-2026-10-15.png)
 
-*Exemple de scores calculés à partir des données du 1er octobre 2026, pour le 2 octobre. Le taux de détection affiché provient de l'évaluation historique détaillée plus bas.*
+*Capture présentant les prévisions pour le 8 octobre 2026. Le taux de détection de 59 % provient de l'évaluation historique détaillée plus bas.*
 
 <details>
 <summary>Voir également l'historique hydrologique et l'analyse départementale</summary>
