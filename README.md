@@ -10,6 +10,14 @@ Mon travail a porté principalement sur le volet hydrologique, sa préparation d
 
 **Technologies :** Python · SQL · BigQuery · dbt · Power BI · scikit-learn · GitHub Actions
 
+## En bref
+
+| Repère | Résultat vérifié |
+| --- | --- |
+| Historique ML | **247 stations**, environ **1,8 million de lignes** (jeu référencé au 07/10/2026) |
+| Qualité automatisée | **49 tests dbt** et **24 tests locaux** réussis le 12/10/2026 |
+| Détection des nouveaux franchissements | **59,19 % de rappel** et **10,6 % de précision** sur le test historique ; modèle sauvegardé à réévaluer |
+
 [Tableaux de bord](#tableaux-de-bord) · [Architecture](#de-la-donnée-brute-aux-indicateurs) · [Machine learning](#une-première-prédiction-à-j1) · [Reproduire les traitements](docs/reproduction.md)
 
 ## Tableaux de bord
@@ -24,9 +32,9 @@ Les pages Power BI permettent de passer d'une vue nationale à une analyse par d
 
 ### Prévision à J+1
 
-![Prévision J+1 dans Power BI : probabilités de dépassement, départements concernés et carte](docs/images/prevision-j1-2026-10-15.png)
+![Prévision J+1 dans Power BI : scores de dépassement, départements concernés et carte](docs/images/prevision-j1-2026-10-15.png)
 
-*Capture présentant les prévisions pour le 8 octobre 2026. Le taux de détection de 59 % provient de l'évaluation historique détaillée plus bas.*
+*Prévisions affichées pour le 8 octobre 2026. Le « risque maximal » de 99,74 % est un **score brut du modèle, dont la calibration n'est pas vérifiée** ; il ne peut pas être interprété comme une probabilité de 99,74 % de dépassement. Le taux de détection de **59 %** correspond au rappel sur les nouveaux franchissements dans l'évaluation historique, avec **10,6 % de précision**. Ces métriques ne sont pas encore validées pour le fichier `.pkl` actuellement déployé.*
 
 <details>
 <summary>Voir également l'historique hydrologique et l'analyse départementale</summary>
@@ -72,6 +80,28 @@ Pour éviter de perdre la trace des modifications, les données brutes sont hist
 
 Les règles, incidents rencontrés et corrections apportées sont documentés dans [les contrôles de qualité](docs/corrections_qualite.md). Le code est accessible dans [`src/`](src/), [`fourcasters/models/`](fourcasters/models/) et [`fourcasters/tests/`](fourcasters/tests/).
 
+## Compétences mises en pratique
+
+| Compétence | Réalisation vérifiable |
+| --- | --- |
+| Hydrologie et préparation SQL | [Modèles dbt](fourcasters/models/marts/) et seuils par station et mois |
+| Qualité des données | [Cas testés](tests/) et [corrections documentées](docs/corrections_qualite.md) |
+| Machine learning | [Notebook d'évaluation](notebooks/ml_fourcasters.ipynb) et [inférence](predict.py) |
+| Business intelligence | [Captures des tableaux de bord](#tableaux-de-bord) Power BI |
+| Automatisation | [Pipeline GitHub Actions](.github/workflows/pipeline.yml) et [orchestration Python](run_pipeline.py) |
+
+## Trois difficultés concrètes
+
+- **Pluie cumulée sur trois jours**  
+  Symptôme : un jour manquant permettait de calculer malgré tout un cumul sur deux jours.  
+  Cause et correction : la fenêtre acceptait un historique incomplet ; le calcul exige désormais trois dates avec trois valeurs. [Test et commit](https://github.com/eddy370/FourCasters/commit/a79975f51dcf59cb8afe3f8726fb9b5278a89028).
+- **Historisation des données brutes**  
+  Symptôme : après une séquence A → B → A, le retour à A pouvait être ignoré.  
+  Cause et correction : le hash était comparé à tout l'historique ; il est désormais comparé à la dernière version de la clé. [Tests et commit](https://github.com/eddy370/FourCasters/commit/a79975f51dcf59cb8afe3f8726fb9b5278a89028).
+- **Évaluation du modèle**  
+  Constat : la persistance (« demain = aujourd'hui ») obtenait un meilleur F1 global que la régression logistique.  
+  Conséquence : l'analyse a également porté sur les nouveaux franchissements, avec rappel **et** précision pour exposer le coût des faux positifs. [Évaluation enregistrée](notebooks/ml_fourcasters.ipynb).
+
 ## Une première prédiction à J+1
 
 L'objectif de cette partie était de prédire si le niveau maximal d'une station atteindrait ou dépasserait le **95e percentile (P95)** de son historique le jour suivant. Ce seuil correspond, pour une station et un mois donnés, à un niveau situé parmi les 5 % d'observations historiques les plus élevées.
@@ -88,7 +118,7 @@ L'évaluation enregistrée dans le [notebook ML](notebooks/ml_fourcasters.ipynb)
 
 Pour les nouveaux franchissements (une station sous le seuil à J et au-dessus à J+1), le modèle en a détecté **3 007 sur 5 080**. La règle de persistance ne repère aucun de ces passages, mais elle obtient un meilleur F1 global. La faible précision du modèle signifie aussi **beaucoup de faux positifs**.
 
-**Précaution importante :** ces métriques proviennent d'une évaluation antérieure aux corrections de qualité des 11–12 octobre 2026. Elles n'ont pas été recalculées sur le jeu corrigé et ne constituent pas une évaluation vérifiée du fichier `.pkl` actuellement utilisé par [`predict.py`](predict.py). Les seuils ont par ailleurs été calculés sur l'ensemble de l'historique : une validation véritablement prospective devra les recalculer en n'utilisant que les données connues à chaque date.
+**Précaution importante :** ces métriques proviennent d'une évaluation antérieure aux corrections de qualité des 11–12 octobre 2026. Elles n'ont pas été recalculées sur le jeu corrigé et ne constituent pas une évaluation vérifiée du fichier `.pkl` actuellement utilisé par [`predict.py`](predict.py). Les sorties de `predict_proba()` ne sont pas calibrées dans le pipeline sauvegardé : les pourcentages affichés doivent être lus comme des **scores**, en attendant une évaluation de calibration (courbe de fiabilité, Brier score). Les seuils ont par ailleurs été calculés sur l'ensemble de l'historique : une validation prospective devra les reconstruire en n'utilisant que les observations connues à chaque date.
 
 ## Une chaîne automatisée et testée
 
@@ -103,6 +133,10 @@ La couverture varie selon les jours et les contrôles qualité : les 247 station
 Le projet a mis en évidence trois difficultés concrètes : maintenir une collecte après une interruption, conserver des données cohérentes lorsque les sources sont corrigées et évaluer correctement un modèle sur des événements rares.
 
 Les prochaines améliorations les plus utiles seraient de réévaluer le modèle sur les données corrigées, de mesurer plus précisément la couverture quotidienne et de réaliser une validation sans information issue du futur. Un dépassement statistique du P95 n'indique pas à lui seul une inondation ou des dommages : **FourCasters est un projet pédagogique et ne constitue pas un système d'alerte officiel**.
+
+## Applications possibles en entreprise
+
+Les méthodes utilisées peuvent servir à consolider des exports provenant de plusieurs logiciels, fiabiliser des données de production ou automatiser des indicateurs opérationnels. L'historisation et les tests facilitent aussi le suivi d'anomalies et la reprise des traitements. **Ces applications en PME sont des pistes de transposition ; elles n'ont pas été réalisées dans FourCasters.**
 
 ## Explorer le code et reproduire le projet
 
